@@ -1,0 +1,2014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StimuliLab — BCBA Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f2ec;
+  --surface: #faf8f4;
+  --surface2: #ede9e0;
+  --border: #d4cfc3;
+  --blue: #4a7fc1;
+  --blue-h: #3a6fad;
+  --green-nav: #6a9e72;
+  --yellow: #c9a84c;
+  --yellow-h: #b8963e;
+  --red: #c05c4a;
+  --red-h: #a84d3c;
+  --success: #6a9e72;
+  --text: #111111;
+  --muted: #5a5348;
+  --card: #faf8f4;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.07);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { background:#f5f2ec; }
+body { font-family:'DM Sans',sans-serif; background:#f5f2ec; color:var(--text); min-height:100vh; }
+
+/* ── NAV ── */
+nav {
+  position:sticky; top:0; z-index:100;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 36px; height:68px;
+  background:#f5f2ec;
+  border-bottom:1.5px solid var(--border);
+}
+.logo { font-family:'Syne',sans-serif; font-weight:800; font-size:1.5rem; letter-spacing:-0.03em; color:var(--text); }
+.logo em { color:var(--blue); font-style:normal; }
+.nav-pills { display:flex; gap:3px; background:#ede9e0; border-radius:12px; padding:4px; border:1.5px solid var(--border); }
+.npill { padding:8px 20px; border-radius:9px; font-size:0.875rem; font-weight:500; cursor:pointer; border:none; background:transparent; color:var(--muted); transition:all 0.18s; font-family:'DM Sans',sans-serif; }
+.npill.active { background:var(--green-nav); color:#fff; }
+.npill:hover:not(.active) { color:var(--text); background:rgba(0,0,0,0.04); }
+.nav-user { display:flex; align-items:center; gap:10px; font-size:0.875rem; color:var(--muted); }
+.nav-avatar { width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg,var(--green-nav),var(--blue)); display:flex; align-items:center; justify-content:center; font-size:0.78rem; font-weight:700; color:#fff; font-family:'Syne',sans-serif; }
+
+/* ── VIEWS ── */
+.view { display:none; background:#f5f2ec; }
+.view.active { display:block; background:#f5f2ec; min-height:100vh; }
+
+/* ── SHARED ── */
+.page { max-width:1200px; margin:0 auto; padding:44px 36px; background:#f5f2ec; }
+.page-head { margin-bottom:36px; display:flex; align-items:flex-start; justify-content:space-between; gap:20px; flex-wrap:wrap; }
+.page-head h1 { font-family:'Syne',sans-serif; font-size:2rem; font-weight:800; letter-spacing:-0.03em; color:var(--text); }
+.page-head p { color:var(--muted); font-size:0.95rem; margin-top:4px; }
+
+/* BUTTONS */
+.btn { display:inline-flex; align-items:center; gap:8px; padding:10px 22px; border-radius:var(--radius-sm); font-size:0.875rem; font-weight:600; cursor:pointer; border:none; font-family:'DM Sans',sans-serif; transition:all 0.18s; white-space:nowrap; }
+.btn-blue { background:var(--blue); color:#fff; }
+.btn-blue:hover { background:var(--blue-h); transform:translateY(-1px); box-shadow:0 6px 20px rgba(74,127,193,0.3); }
+.btn-primary { background:var(--blue); color:#fff; }
+.btn-primary:hover { background:var(--blue-h); transform:translateY(-1px); box-shadow:0 6px 20px rgba(74,127,193,0.3); }
+.btn-yellow { background:var(--yellow); color:#fff; }
+.btn-yellow:hover { background:var(--yellow-h); transform:translateY(-1px); }
+.btn-red { background:var(--red); color:#fff; }
+.btn-red:hover { background:var(--red-h); }
+.btn-green { background:var(--success); color:#fff; }
+.btn-green:hover { background:#5c8e64; }
+.btn-ghost { background:transparent; color:var(--muted); border:1.5px solid var(--border); }
+.btn-ghost:hover { color:var(--text); border-color:var(--muted); }
+.btn-danger-soft { background:rgba(192,92,74,0.1); color:var(--red); border:1.5px solid rgba(192,92,74,0.25); }
+.btn-danger-soft:hover { background:rgba(192,92,74,0.2); }
+.btn-sm { padding:7px 14px; font-size:0.8rem; }
+.btn-xs { padding:5px 10px; font-size:0.75rem; }
+
+label { display:block; font-size:0.78rem; font-weight:600; color:var(--muted); margin-bottom:7px; text-transform:uppercase; letter-spacing:0.07em; }
+input[type=text],input[type=number],input[type=date],select,textarea { width:100%; background:#faf8f4; border:1.5px solid var(--border); border-radius:var(--radius-sm); color:var(--text); padding:10px 14px; font-size:0.9rem; font-family:'DM Sans',sans-serif; outline:none; transition:border-color 0.18s; }
+input:focus,select:focus,textarea:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(74,127,193,0.12); }
+textarea { resize:vertical; min-height:70px; }
+
+.panel { background:#faf8f4; border:1.5px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; margin-bottom:18px; }
+.panel-head { padding:18px 22px; border-bottom:1.5px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.panel-title { font-family:'Syne',sans-serif; font-size:0.95rem; font-weight:700; }
+.panel-body { padding:22px; }
+
+.empty { text-align:center; padding:48px 24px; color:var(--muted); font-size:0.9rem; border:2px dashed var(--border); border-radius:var(--radius); background:#faf8f4; }
+.empty .e-ico { font-size:2.4rem; margin-bottom:10px; }
+
+.chip { padding:3px 10px; border-radius:20px; font-size:0.72rem; font-weight:600; background:#ede9e0; color:var(--muted); }
+.chip-blue { background:rgba(74,127,193,0.12); color:var(--blue); }
+.chip-green { background:rgba(106,158,114,0.12); color:var(--success); }
+.chip-yellow { background:rgba(201,168,76,0.15); color:#8a6e1c; }
+.chip-red { background:rgba(192,92,74,0.12); color:var(--red); }
+
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+
+/* ── STATS ── */
+.stats-bar { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:36px; }
+.stat { background:#faf8f4; border:1.5px solid var(--border); border-radius:var(--radius); padding:20px 22px; box-shadow:var(--shadow); }
+.stat-num { font-family:'Syne',sans-serif; font-size:2rem; font-weight:800; letter-spacing:-0.03em; color:var(--text); }
+.stat-lbl { font-size:0.78rem; color:var(--muted); margin-top:2px; text-transform:uppercase; letter-spacing:0.07em; }
+
+/* ── OBJECTIVES DASHBOARD ── */
+.obj-list { display:flex; flex-direction:column; gap:16px; }
+.obj-card { background:#faf8f4; border:1.5px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; transition:box-shadow 0.2s; }
+.obj-card:hover { box-shadow:var(--shadow-lg); }
+.obj-header { display:flex; align-items:center; gap:16px; padding:20px 24px; cursor:pointer; border-bottom:1.5px solid transparent; transition:border-color 0.2s; }
+.obj-header.open { border-bottom-color:var(--border); }
+.obj-badge { padding:4px 12px; border-radius:20px; font-size:0.72rem; font-weight:700; font-family:'Syne',sans-serif; letter-spacing:0.06em; background:#ede9e0; color:var(--muted); flex-shrink:0; }
+.obj-name { font-family:'Syne',sans-serif; font-size:1.05rem; font-weight:700; flex:1; }
+.obj-meta { font-size:0.8rem; color:var(--muted); }
+.obj-chevron { font-size:0.8rem; color:var(--muted); transition:transform 0.2s; flex-shrink:0; }
+.obj-chevron.open { transform:rotate(180deg); }
+.task-rows { padding:0 24px 20px; }
+.task-row { display:flex; align-items:center; gap:14px; padding:14px 0; border-bottom:1px solid var(--border); }
+.task-row:last-child { border-bottom:none; }
+.task-num { width:28px; height:28px; border-radius:50%; background:#ede9e0; border:1.5px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; color:var(--muted); flex-shrink:0; }
+.task-info { flex:1; }
+.task-info h4 { font-size:0.9rem; font-weight:600; }
+.task-info p { font-size:0.78rem; color:var(--muted); margin-top:2px; }
+.task-chips { display:flex; gap:6px; flex-wrap:wrap; }
+.run-session-btn { padding:20px 24px; border-top:1.5px solid var(--border); display:flex; align-items:center; gap:12px; flex-wrap:wrap; background:#ede9e0; }
+
+/* ── STUDENTS ── */
+.student-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; }
+.student-card { background:#faf8f4; border:1.5px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; cursor:pointer; transition:all 0.2s; }
+.student-card:hover { box-shadow:var(--shadow-lg); transform:translateY(-2px); border-color:var(--blue); }
+.student-card-top { padding:24px; display:flex; align-items:center; gap:16px; border-bottom:1.5px solid var(--border); }
+.student-avatar { width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.4rem; flex-shrink:0; border:2px solid var(--border); background:#ede9e0; }
+.student-name { font-family:'Syne',sans-serif; font-weight:700; font-size:1rem; }
+.student-dob { font-size:0.78rem; color:var(--muted); margin-top:2px; }
+.student-card-body { padding:16px 24px; display:flex; gap:16px; }
+.sc-stat { text-align:center; flex:1; }
+.sc-stat-num { font-family:'Syne',sans-serif; font-weight:800; font-size:1.3rem; color:var(--text); }
+.sc-stat-lbl { font-size:0.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; }
+
+/* ── PROFILE ── */
+.profile-layout { display:grid; grid-template-columns:300px 1fr; gap:24px; align-items:start; }
+.profile-avatar-big { width:80px; height:80px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2.4rem; background:#ede9e0; border:2px solid var(--border); cursor:pointer; transition:border-color 0.18s; margin-bottom:16px; }
+.profile-avatar-big:hover { border-color:var(--blue); }
+.avatar-picker { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+.avatar-opt { font-size:1.6rem; cursor:pointer; padding:6px; border-radius:8px; border:2px solid transparent; transition:all 0.15s; }
+.avatar-opt:hover,.avatar-opt.selected { border-color:var(--blue); background:rgba(74,127,193,0.08); }
+.assigned-obj-row { display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); }
+.assigned-obj-row:last-child { border-bottom:none; }
+.aobj-info { flex:1; }
+.aobj-name { font-size:0.88rem; font-weight:600; }
+.aobj-meta { font-size:0.75rem; color:var(--muted); margin-top:2px; }
+.history-table { width:100%; border-collapse:collapse; font-size:0.85rem; }
+.history-table th { text-align:left; padding:10px 14px; font-size:0.72rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.07em; border-bottom:2px solid var(--border); background:#ede9e0; }
+.history-table td { padding:12px 14px; border-bottom:1px solid var(--border); }
+.history-table tr:last-child td { border-bottom:none; }
+.history-table tr:hover td { background:#ede9e0; }
+.pct-badge { padding:3px 10px; border-radius:20px; font-size:0.75rem; font-weight:700; }
+.pct-high { background:rgba(106,158,114,0.15); color:#4a8a55; }
+.pct-mid { background:rgba(201,168,76,0.15); color:#8a6e1c; }
+.pct-low { background:rgba(192,92,74,0.15); color:var(--red); }
+
+/* ── BUILDER ── */
+.builder-wrap { display:grid; grid-template-columns:1fr 340px; gap:24px; align-items:start; }
+.form-group { margin-bottom:14px; }
+.tbc-row { display:flex; gap:12px; margin-bottom:12px; align-items:flex-end; }
+.tbc-row .form-group { flex:1; margin:0; }
+.task-build-card { background:#faf8f4; border:1.5px solid var(--border); border-radius:var(--radius-sm); margin-bottom:14px; overflow:hidden; }
+.tbc-head { display:flex; align-items:center; gap:12px; padding:14px 18px; background:#ede9e0; border-bottom:1.5px solid var(--border); }
+.tbc-num { width:26px; height:26px; border-radius:50%; background:var(--blue); color:#fff; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:800; font-family:'Syne',sans-serif; flex-shrink:0; }
+.tbc-title { font-size:0.88rem; font-weight:700; flex:1; }
+.tbc-remove { width:24px; height:24px; border-radius:50%; background:rgba(192,92,74,0.1); color:var(--red); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:0.85rem; }
+.tbc-remove:hover { background:rgba(192,92,74,0.25); }
+.tbc-body { padding:16px 18px; }
+
+/* task type selector in builder */
+.task-type-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px; }
+.task-type-opt { border:2px solid var(--border); border-radius:var(--radius-sm); padding:12px 8px; text-align:center; cursor:pointer; transition:all 0.18s; background:#faf8f4; }
+.task-type-opt:hover { border-color:var(--blue); }
+.task-type-opt.selected { border-color:var(--blue); background:rgba(74,127,193,0.07); }
+.task-type-opt .tt-icon { font-size:1.4rem; margin-bottom:4px; }
+.task-type-opt .tt-label { font-size:0.72rem; font-weight:700; color:var(--muted); }
+.task-type-opt.selected .tt-label { color:var(--blue); }
+
+.items-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(72px,1fr)); gap:8px; margin-top:8px; }
+.item-thumb { border:2px solid var(--border); border-radius:10px; padding:10px 6px; text-align:center; cursor:pointer; transition:all 0.18s; background:#faf8f4; position:relative; }
+.item-thumb:hover { border-color:var(--blue); }
+.item-thumb.target { border-color:var(--blue); background:rgba(74,127,193,0.07); }
+.item-thumb.distractor { border-color:var(--success); background:rgba(106,158,114,0.07); }
+.item-thumb.seq-item-thumb { border-color:var(--yellow); background:rgba(201,168,76,0.07); }
+.item-thumb .it-emoji { font-size:1.6rem; }
+.item-thumb .it-word { font-size:0.68rem; font-weight:600; margin-top:4px; color:var(--muted); }
+.item-thumb .it-badge { position:absolute; top:-6px; right:-6px; width:18px; height:18px; border-radius:50%; font-size:0.6rem; font-weight:800; display:flex; align-items:center; justify-content:center; border:2px solid #f5f2ec; }
+.it-badge-t { background:var(--blue); color:#fff; }
+.it-badge-d { background:var(--success); color:#fff; }
+.it-badge-s { background:var(--yellow); color:#fff; }
+.it-badge-num { background:var(--yellow); color:#fff; }
+.item-legend { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:10px; font-size:0.78rem; color:var(--muted); }
+.legend-dot { width:10px; height:10px; border-radius:50%; display:inline-block; margin-right:4px; vertical-align:middle; }
+
+/* sequence step list in builder */
+.seq-step-list { display:flex; flex-direction:column; gap:8px; margin-top:8px; }
+.seq-step-row { display:flex; align-items:center; gap:10px; background:#ede9e0; border:1.5px solid var(--border); border-radius:var(--radius-sm); padding:10px 12px; }
+.seq-step-num { width:24px; height:24px; border-radius:50%; background:var(--yellow); color:#fff; font-size:0.72rem; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.seq-step-emoji { font-size:1.3rem; flex-shrink:0; }
+.seq-step-label { flex:1; font-size:0.88rem; font-weight:600; }
+.seq-step-remove { background:none; border:none; cursor:pointer; color:var(--muted); font-size:0.8rem; padding:2px 4px; }
+.seq-step-remove:hover { color:var(--red); }
+
+/* lib */
+.lib-section-head { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; }
+.lib-mini-chip { padding:5px 12px; border-radius:20px; font-size:0.75rem; font-weight:600; cursor:pointer; border:1.5px solid var(--border); background:transparent; color:var(--muted); font-family:'DM Sans',sans-serif; transition:all 0.15s; }
+.lib-mini-chip.active { background:var(--blue); border-color:var(--blue); color:#fff; }
+.lib-mini-chip:hover:not(.active) { color:var(--text); }
+.lib-grid-mini { display:grid; grid-template-columns:repeat(4,1fr); gap:7px; max-height:300px; overflow-y:auto; }
+.lib-cell { border:1.5px solid var(--border); border-radius:9px; padding:8px 4px; text-align:center; cursor:pointer; transition:all 0.15s; background:#faf8f4; font-size:0.68rem; color:var(--muted); font-weight:600; }
+.lib-cell .lc-emoji { font-size:1.4rem; display:block; margin-bottom:3px; }
+.lib-cell:hover { border-color:var(--blue); }
+.lib-cell.selected { border-color:var(--blue); background:rgba(74,127,193,0.09); }
+
+/* ── MODAL ── */
+.modal-backdrop { display:none; position:fixed; inset:0; background:rgba(17,17,17,0.4); z-index:200; align-items:center; justify-content:center; padding:24px; backdrop-filter:blur(4px); }
+.modal-backdrop.open { display:flex; }
+.modal { background:#faf8f4; border-radius:var(--radius); box-shadow:var(--shadow-lg); width:100%; max-width:560px; max-height:90vh; overflow-y:auto; border:1.5px solid var(--border); }
+.modal-head { padding:24px 28px 0; display:flex; align-items:center; justify-content:space-between; }
+.modal-head h2 { font-family:'Syne',sans-serif; font-weight:800; font-size:1.2rem; }
+.modal-close { background:none; border:none; font-size:1.2rem; cursor:pointer; color:var(--muted); padding:4px; }
+.modal-close:hover { color:var(--text); }
+.modal-body { padding:24px 28px; }
+.modal-foot { padding:0 28px 24px; display:flex; gap:10px; justify-content:flex-end; }
+.obj-check-list { display:flex; flex-direction:column; gap:8px; max-height:220px; overflow-y:auto; }
+.obj-check-row { display:flex; align-items:center; gap:12px; padding:10px 14px; border:1.5px solid var(--border); border-radius:var(--radius-sm); cursor:pointer; transition:all 0.15s; background:#faf8f4; }
+.obj-check-row:hover { border-color:var(--blue); background:rgba(74,127,193,0.04); }
+.obj-check-row.checked { border-color:var(--blue); background:rgba(74,127,193,0.07); }
+.obj-check-row input[type=checkbox] { width:16px; height:16px; accent-color:var(--blue); flex-shrink:0; }
+.obj-check-name { font-size:0.88rem; font-weight:600; }
+.obj-check-meta { font-size:0.75rem; color:var(--muted); }
+
+/* ── RUNNER ── */
+.runner { display:none; position:fixed; inset:0; z-index:500; background:#f5f2ec; flex-direction:column; }
+.runner.open { display:flex; }
+.runner-top { display:flex; align-items:center; justify-content:space-between; padding:0 36px; height:64px; border-bottom:1.5px solid var(--border); background:#faf8f4; flex-shrink:0; gap:20px; }
+.runner-student-info { display:flex; align-items:center; gap:10px; }
+.runner-student-avatar { width:36px; height:36px; border-radius:50%; background:#ede9e0; border:1.5px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:1.1rem; }
+.runner-student-name { font-family:'Syne',sans-serif; font-weight:700; font-size:0.95rem; }
+.runner-obj-name { font-size:0.78rem; color:var(--muted); }
+.runner-progress-wrap { flex-shrink:0; padding:16px 36px 0; background:#faf8f4; border-bottom:1.5px solid var(--border); }
+.progress-label { font-size:0.78rem; color:var(--muted); margin-bottom:8px; font-weight:600; text-transform:uppercase; letter-spacing:0.07em; }
+.task-tabs { display:flex; gap:4px; }
+.ttab { padding:8px 18px; border-radius:8px 8px 0 0; font-size:0.82rem; font-weight:600; border:1.5px solid var(--border); border-bottom:none; background:#ede9e0; color:var(--muted); cursor:default; font-family:'DM Sans',sans-serif; position:relative; bottom:-1px; }
+.ttab.done { background:var(--success); color:#fff; border-color:var(--success); }
+.ttab.current { background:var(--blue); color:#fff; border-color:var(--blue); }
+.runner-body { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 36px 100px; overflow-y:auto; background:#f5f2ec; }
+
+/* prompt bar */
+.prompt-bar { position:fixed; bottom:0; left:0; right:0; z-index:502; background:#faf8f4; border-top:1.5px solid var(--border); padding:12px 36px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.prompt-bar-label { font-size:0.78rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.07em; margin-right:4px; white-space:nowrap; }
+.prompt-btn { padding:8px 16px; border-radius:8px; font-size:0.78rem; font-weight:700; cursor:pointer; border:1.5px solid var(--border); background:#ede9e0; color:var(--muted); font-family:'DM Sans',sans-serif; transition:all 0.15s; }
+.prompt-btn:hover { border-color:var(--blue); color:var(--blue); }
+.prompt-btn.active { background:var(--blue); border-color:var(--blue); color:#fff; }
+
+/* instruction */
+.instruction-banner { text-align:center; margin-bottom:40px; }
+.task-label { font-size:0.78rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:10px; }
+.instruction-text { font-family:'Syne',sans-serif; font-size:2rem; font-weight:800; letter-spacing:-0.03em; color:var(--text); background:#faf8f4; display:inline-block; padding:16px 36px; border-radius:var(--radius); border:2px solid var(--border); box-shadow:var(--shadow); }
+
+/* picture cards (identification + matching) */
+.pic-grid { display:flex; flex-wrap:wrap; gap:18px; justify-content:center; max-width:840px; }
+.pic-card { background:#faf8f4; border:3px solid var(--border); border-radius:20px; padding:28px 20px; cursor:pointer; transition:all 0.22s; display:flex; flex-direction:column; align-items:center; gap:10px; min-width:140px; box-shadow:var(--shadow); position:relative; overflow:hidden; user-select:none; }
+.pic-card:hover { border-color:var(--blue); transform:translateY(-4px) scale(1.02); box-shadow:0 16px 40px rgba(0,0,0,0.10); }
+.pic-card.selected-correct { border-color:var(--success); background:#f3faf4; transform:scale(1.04); box-shadow:0 0 0 4px rgba(106,158,114,0.2),var(--shadow-lg); animation:popIn 0.3s ease; }
+.pic-card.selected-wrong { border-color:var(--red); background:#fdf4f3; animation:shakeCard 0.35s ease; }
+.pic-card.grayed { opacity:0.3; pointer-events:none; transform:none !important; }
+.pic-card.multi-selected { border-color:var(--yellow); background:rgba(201,168,76,0.06); box-shadow:0 0 0 3px rgba(201,168,76,0.2),var(--shadow); }
+.pic-card.match-selected { border-color:var(--blue); background:rgba(74,127,193,0.06); box-shadow:0 0 0 3px rgba(74,127,193,0.2),var(--shadow); }
+.pic-card.match-correct { border-color:var(--success); background:#f3faf4; pointer-events:none; }
+.pic-card.match-wrong { border-color:var(--red); background:#fdf4f3; animation:shakeCard 0.35s ease; }
+.pic-emoji { font-size:3.4rem; line-height:1; }
+.pic-word { font-family:'Syne',sans-serif; font-size:1rem; font-weight:700; color:var(--text); }
+.pic-feedback { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:2.8rem; border-radius:17px; opacity:0; transition:opacity 0.2s; pointer-events:none; background:rgba(255,255,255,0.5); }
+.pic-card.selected-correct .pic-feedback, .pic-card.selected-wrong .pic-feedback { opacity:1; }
+
+/* matching layout */
+.match-layout { display:grid; grid-template-columns:1fr 60px 1fr; gap:12px; max-width:780px; width:100%; }
+.match-col-label { font-size:0.72rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; text-align:center; margin-bottom:10px; }
+.match-connector-col { display:flex; flex-direction:column; gap:12px; align-items:center; justify-content:center; padding-top:26px; }
+.conn-line { width:2px; height:60px; background:var(--border); border-radius:2px; transition:background 0.3s; }
+.conn-line.matched { background:var(--success); }
+
+/* sequence runner */
+.seq-runner-list { display:flex; flex-direction:column; gap:10px; width:100%; max-width:520px; }
+.seq-slot { background:#faf8f4; border:2px dashed var(--border); border-radius:14px; padding:16px 20px; display:flex; align-items:center; gap:14px; min-height:68px; transition:all 0.2s; }
+.seq-slot.filled { border-style:solid; border-color:var(--border); background:#ede9e0; }
+.seq-slot.correct-slot { border-color:var(--success); background:#f3faf4; }
+.seq-slot.wrong-slot { border-color:var(--red); background:#fdf4f3; animation:shakeCard 0.35s ease; }
+.seq-slot-num { width:28px; height:28px; border-radius:50%; background:#ede9e0; border:1.5px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; color:var(--muted); flex-shrink:0; }
+.seq-slot.filled .seq-slot-num { background:var(--blue); border-color:var(--blue); color:#fff; }
+.seq-slot-content { display:flex; align-items:center; gap:10px; flex:1; }
+.seq-slot-emoji { font-size:1.6rem; }
+.seq-slot-text { font-family:'Syne',sans-serif; font-weight:700; font-size:0.95rem; }
+.seq-slot-placeholder { color:var(--muted); font-size:0.85rem; font-style:italic; }
+.seq-slot-remove { background:none; border:none; cursor:pointer; color:var(--muted); font-size:1rem; padding:4px; }
+.seq-slot-remove:hover { color:var(--red); }
+
+.seq-choices { display:flex; flex-wrap:wrap; gap:12px; justify-content:center; max-width:580px; margin-top:24px; }
+.seq-choice { background:#faf8f4; border:2px solid var(--border); border-radius:14px; padding:14px 18px; cursor:pointer; display:flex; align-items:center; gap:10px; transition:all 0.2s; box-shadow:var(--shadow); }
+.seq-choice:hover { border-color:var(--blue); transform:translateY(-2px); box-shadow:var(--shadow-lg); }
+.seq-choice.used { opacity:0.25; pointer-events:none; }
+.seq-choice-emoji { font-size:1.6rem; }
+.seq-choice-text { font-family:'Syne',sans-serif; font-weight:700; font-size:0.88rem; }
+
+/* trial dots */
+.trial-bar { display:flex; gap:6px; margin-top:24px; justify-content:center; }
+.trial-dot { width:10px; height:10px; border-radius:50%; background:var(--border); transition:background 0.3s; }
+.trial-dot.done { background:var(--success); }
+.trial-dot.current { background:var(--blue); transform:scale(1.3); }
+
+.multi-submit-area { margin-top:24px; display:flex; gap:12px; align-items:center; }
+
+/* results */
+.result-full { text-align:center; max-width:580px; padding-bottom:80px; }
+.result-big { font-size:5rem; margin-bottom:20px; animation:bounceIn 0.6s; }
+.result-full h2 { font-family:'Syne',sans-serif; font-size:2.2rem; font-weight:800; letter-spacing:-0.03em; margin-bottom:10px; }
+.result-full p { color:var(--muted); font-size:1rem; margin-bottom:28px; }
+.score-breakdown { display:flex; gap:14px; justify-content:center; margin-bottom:24px; flex-wrap:wrap; }
+.score-box { background:#faf8f4; border:1.5px solid var(--border); border-radius:var(--radius); padding:16px 24px; text-align:center; box-shadow:var(--shadow); }
+.score-box .sb-num { font-family:'Syne',sans-serif; font-size:2rem; font-weight:800; color:var(--text); }
+.score-box .sb-lbl { font-size:0.75rem; color:var(--muted); margin-top:2px; }
+.trial-log { width:100%; border-collapse:collapse; font-size:0.82rem; text-align:left; margin-bottom:24px; }
+.trial-log th { padding:8px 12px; font-size:0.7rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.07em; border-bottom:2px solid var(--border); background:#ede9e0; }
+.trial-log td { padding:10px 12px; border-bottom:1px solid var(--border); }
+.trial-log tr:last-child td { border-bottom:none; }
+
+
+/* REINFORCER STRIP */
+.reinforcer-strip{background:rgba(201,168,76,0.1);border:1.5px solid rgba(201,168,76,0.3);border-radius:var(--radius-sm);padding:12px 16px;margin-bottom:0;display:flex;align-items:flex-start;gap:10px;}
+.reinforcer-strip-label{font-size:0.7rem;font-weight:700;color:#8a6e1c;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px;}
+.reinforcer-strip-text{font-size:0.85rem;color:#111;}
+.reinforcer-banner{background:rgba(201,168,76,0.1);border:1.5px solid rgba(201,168,76,0.3);border-radius:var(--radius-sm);padding:10px 16px;font-size:0.85rem;display:flex;align-items:center;gap:8px;max-width:640px;width:100%;margin-bottom:16px;}
+
+/* MASTERY */
+.mastery-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:0.72rem;font-weight:700;}
+.mastery-not-started{background:#ede9e0;color:var(--muted);}
+.mastery-in-progress{background:rgba(201,168,76,0.15);color:#8a6e1c;}
+.mastery-mastered{background:rgba(106,158,114,0.15);color:#4a8a55;}
+.mastery-bar-track{height:8px;background:#ede9e0;border-radius:4px;overflow:hidden;margin-top:6px;}
+.mastery-bar-fill{height:100%;border-radius:4px;background:var(--success);transition:width 0.4s;}
+.mastery-bar-labels{display:flex;justify-content:space-between;font-size:0.7rem;color:var(--muted);margin-top:3px;}
+.mastery-criteria-block{background:#ede9e0;border-radius:var(--radius-sm);padding:14px 16px;margin-top:12px;border:1.5px solid var(--border);}
+.mastery-criteria-title{font-size:0.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:10px;}
+.mastery-row{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
+.mastery-row label{margin:0;white-space:nowrap;min-width:100px;}
+.mastery-val{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:var(--blue);min-width:40px;text-align:right;}
+
+/* PROMPT SUGGESTION */
+.prompt-suggest-box{background:rgba(74,127,193,0.07);border:1.5px solid rgba(74,127,193,0.2);border-radius:var(--radius-sm);padding:10px 14px;font-size:0.82rem;color:#111;margin-top:10px;}
+.prompt-suggest-box strong{color:var(--blue);}
+.prompt-suggest-runner{font-size:0.72rem;color:var(--muted);margin-left:8px;font-style:italic;}
+
+/* PHOTO LIBRARY */
+.photo-library-wrap{display:grid;grid-template-columns:200px 1fr;gap:20px;align-items:start;}
+.cat-sidebar{background:#faf8f4;border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);}
+.cat-sidebar-head{padding:14px 16px;border-bottom:1.5px solid var(--border);font-family:'Syne',sans-serif;font-weight:700;font-size:0.88rem;display:flex;align-items:center;justify-content:space-between;}
+.cat-item{display:flex;align-items:center;gap:8px;padding:10px 16px;cursor:pointer;font-size:0.85rem;border-bottom:1px solid var(--border);transition:all 0.15s;}
+.cat-item:last-child{border-bottom:none;}
+.cat-item:hover{background:#ede9e0;}
+.cat-item.active{background:rgba(74,127,193,0.08);color:var(--blue);font-weight:600;}
+.cat-count{margin-left:auto;font-size:0.7rem;background:#ede9e0;color:var(--muted);border-radius:10px;padding:1px 7px;font-weight:700;}
+.cat-item.active .cat-count{background:rgba(74,127,193,0.15);color:var(--blue);}
+.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;}
+.photo-card{background:#faf8f4;border:1.5px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);transition:all 0.2s;position:relative;}
+.photo-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px);}
+.photo-card img{width:100%;height:90px;object-fit:cover;display:block;}
+.photo-card-emoji{width:100%;height:90px;display:flex;align-items:center;justify-content:center;font-size:2.2rem;background:#ede9e0;}
+.photo-card-info{padding:7px 9px;}
+.photo-card-name{font-size:0.76rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.photo-card-cat{font-size:0.66rem;color:var(--muted);}
+.photo-card-del{position:absolute;top:5px;right:5px;width:22px;height:22px;border-radius:50%;background:rgba(192,92,74,0.85);color:#fff;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;font-size:0.68rem;}
+.photo-card:hover .photo-card-del{display:flex;}
+
+/* UPLOAD ZONE */
+.upload-zone{border:2px dashed var(--border);border-radius:var(--radius);padding:28px;text-align:center;cursor:pointer;transition:all 0.2s;background:#faf8f4;margin-bottom:14px;}
+.upload-zone:hover,.upload-zone.dragover{border-color:var(--blue);background:rgba(74,127,193,0.04);}
+.upload-zone-ico{font-size:2rem;margin-bottom:8px;}
+.upload-zone p{color:var(--muted);font-size:0.88rem;}
+.upload-zone strong{color:var(--blue);}
+#file-input{display:none;}
+
+/* TASK CARD ENHANCEMENTS */
+.tbc-actions{display:flex;gap:5px;}
+.tbc-icon-btn{width:26px;height:26px;border-radius:6px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.8rem;transition:all 0.15s;}
+.tbc-copy{background:rgba(74,127,193,0.12);color:var(--blue);}
+.tbc-copy:hover{background:rgba(74,127,193,0.25);}
+.tbc-preview{background:rgba(106,158,114,0.12);color:var(--success);}
+.tbc-preview:hover{background:rgba(106,158,114,0.25);}
+.tbc-remove{background:rgba(192,92,74,0.1);color:var(--red);}
+.tbc-remove:hover{background:rgba(192,92,74,0.25);}
+.drag-handle{cursor:grab;color:var(--muted);padding:0 4px;user-select:none;font-size:0.9rem;}
+.drag-handle:active{cursor:grabbing;}
+.task-build-card.drag-over{border:2px dashed var(--blue);background:rgba(74,127,193,0.03);}
+
+/* PREVIEW MODAL */
+.preview-modal{background:#faf8f4;border-radius:var(--radius);box-shadow:var(--shadow-lg);width:100%;max-width:700px;max-height:90vh;overflow-y:auto;border:1.5px solid var(--border);}
+.preview-pic-grid{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;padding:16px 0;}
+.preview-pic{background:#faf8f4;border:3px solid var(--border);border-radius:16px;padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:8px;min-width:110px;box-shadow:var(--shadow);}
+.preview-pic.is-target{border-color:var(--blue);background:rgba(74,127,193,0.05);}
+
+/* lib search */
+.lib-search{position:relative;margin-bottom:10px;}
+.lib-search input{padding-left:30px;}
+.lib-search-ico{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;}
+
+@keyframes popIn { 0%{transform:scale(1.04)}50%{transform:scale(1.08)}100%{transform:scale(1.04)} }
+@keyframes shakeCard { 0%,100%{transform:translateX(0)}25%{transform:translateX(-10px)}75%{transform:translateX(10px)} }
+@keyframes bounceIn { 0%{transform:scale(0.3);opacity:0}60%{transform:scale(1.1)}100%{transform:scale(1);opacity:1} }
+
+.toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--text); color:#fff; padding:12px 24px; border-radius:var(--radius-sm); font-size:0.875rem; font-weight:500; z-index:600; transition:transform 0.28s; white-space:nowrap; }
+.toast.show { transform:translateX(-50%) translateY(0); }
+
+@media(max-width:900px){
+  .profile-layout,.builder-wrap{grid-template-columns:1fr;}
+  .stats-bar{grid-template-columns:repeat(2,1fr);}
+  nav{padding:0 16px;}
+  .page{padding:24px 16px;}
+  .runner-top,.runner-body,.runner-progress-wrap,.prompt-bar{padding-left:16px;padding-right:16px;}
+  .match-layout{grid-template-columns:1fr;}
+  .match-connector-col{display:none;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Stimuli<em>Lab</em></div>
+  <div class="nav-pills">
+    <button class="npill active" onclick="gotoView('dashboard')">Objectives</button>
+    <button class="npill" onclick="gotoView('students')">Students</button>
+    <button class="npill" onclick="gotoView('photos')">Photo Library</button>
+    <button class="npill" onclick="gotoView('builder')">Build Objective</button>
+  </div>
+  <div class="nav-user">
+    <div class="nav-avatar">CR</div>
+    Dr. Carla Rios
+  </div>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<!-- ═══ RUNNER ═══ -->
+<div class="runner" id="runner">
+  <div class="runner-top">
+    <div class="runner-student-info">
+      <div class="runner-student-avatar" id="r-student-avatar">👤</div>
+      <div>
+        <div class="runner-student-name" id="r-student-name">—</div>
+        <div class="runner-obj-name" id="r-obj-name">—</div>
+      </div>
+    </div>
+    <div id="r-task-indicator" style="font-size:0.88rem;color:var(--muted);font-weight:500;flex:1;text-align:center"></div>
+    <button class="btn btn-ghost btn-sm" onclick="closeRunner()">✕ End Session</button>
+  </div>
+  <div class="runner-progress-wrap">
+    <div class="progress-label">Tasks in this objective</div>
+    <div class="task-tabs" id="task-tabs"></div>
+  </div>
+  <div class="runner-body" id="runner-body"></div>
+  <div class="prompt-bar" id="prompt-bar">
+    <span class="prompt-bar-label">Prompt:</span>
+    <button class="prompt-btn active" onclick="setPrompt('Independent')" id="pb-ind">Independent</button>
+    <button class="prompt-btn" onclick="setPrompt('Gestural')" id="pb-gest">Gestural</button>
+    <button class="prompt-btn" onclick="setPrompt('Verbal')" id="pb-verb">Verbal</button>
+    <button class="prompt-btn" onclick="setPrompt('Physical')" id="pb-phys">Physical</button>
+    <button class="prompt-btn" onclick="setPrompt('Full Physical')" id="pb-full">Full Physical</button>
+  </div>
+</div>
+
+<!-- ═══ MODAL: STUDENT ═══ -->
+<div class="modal-backdrop" id="modal-student">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="modal-student-title">Add Student</h2>
+      <button class="modal-close" onclick="closeModal('modal-student')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;align-items:center;gap:20px;margin-bottom:20px">
+        <div><label>Avatar</label><div class="profile-avatar-big" id="avatar-preview" onclick="toggleAvatarPicker()">🧒</div></div>
+        <div style="flex:1">
+          <div class="form-group"><label>Full Name</label><input type="text" id="s-name" placeholder="Student full name"/></div>
+          <div class="form-group" style="margin:0"><label>Date of Birth</label><input type="date" id="s-dob"/></div>
+        </div>
+      </div>
+      <div class="avatar-picker" id="avatar-picker" style="display:none;margin-bottom:16px"></div>
+      <div class="form-group"><label>Diagnosis / Notes</label><textarea id="s-notes" placeholder="e.g. ASD Level 2, nonverbal, prefers visual prompts..."></textarea></div>
+          <div class="form-group" style="margin-top:14px;margin-bottom:0">
+        <label>🌟 Reinforcers / Motivators</label>
+        <input type="text" id="s-reinforcers" placeholder="e.g. bubbles, sticker chart, iPad time, verbal praise"/>
+        <div style="font-size:0.75rem;color:var(--muted);margin-top:5px">Shown to BCBA during sessions as a reminder</div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('modal-student')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveStudent()">Save Student</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL: ASSIGN ═══ -->
+<div class="modal-backdrop" id="modal-assign">
+  <div class="modal">
+    <div class="modal-head"><h2>Assign Objectives</h2><button class="modal-close" onclick="closeModal('modal-assign')">✕</button></div>
+    <div class="modal-body">
+      <p style="color:var(--muted);font-size:0.88rem;margin-bottom:16px">Select objectives to assign to this student.</p>
+      <div class="obj-check-list" id="obj-check-list"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('modal-assign')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveAssignments()">Save</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- VIEW: PHOTO LIBRARY -->
+<div class="view" id="view-photos">
+  <div class="page">
+    <div class="page-head">
+      <div><h1>Photo Library</h1><p>Upload your own photos, organize by category and tag</p></div>
+      <button class="btn btn-primary" onclick="openAddPhoto()">+ Upload Photos</button>
+    </div>
+    <div style="margin-bottom:16px">
+      <div class="lib-search"><span class="lib-search-ico">🔍</span><input type="text" id="photo-search" placeholder="Search by name or tag..." oninput="renderPhotoLibrary()"/></div>
+    </div>
+    <div class="photo-library-wrap">
+      <div class="cat-sidebar">
+        <div class="cat-sidebar-head">Categories <button class="btn btn-ghost btn-xs" onclick="promptNewCategory()">+ New</button></div>
+        <div id="cat-sidebar-list"></div>
+      </div>
+      <div><div class="photo-grid" id="photo-grid"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: ADD PHOTO -->
+<div class="modal-backdrop" id="modal-photo">
+  <div class="modal">
+    <div class="modal-head"><h2>Upload Photos</h2><button class="modal-close" onclick="closeModal('modal-photo')">✕</button></div>
+    <div class="modal-body">
+      <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()"
+        ondragover="event.preventDefault();this.classList.add('dragover')"
+        ondragleave="this.classList.remove('dragover')"
+        ondrop="handleDrop(event)">
+        <div class="upload-zone-ico">📁</div>
+        <p><strong>Click to upload</strong> or drag & drop</p>
+        <p style="margin-top:4px;font-size:0.78rem;color:var(--muted)">PNG, JPG, GIF · Multiple files OK</p>
+      </div>
+      <input type="file" id="file-input" accept="image/*" multiple onchange="handleFileSelect(event)"/>
+      <div id="upload-previews" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px"></div>
+      <div class="form-group">
+        <label>Category</label>
+        <div style="display:flex;gap:8px">
+          <select id="photo-cat" style="flex:1"></select>
+          <button class="btn btn-ghost btn-sm" onclick="promptNewCategory()">+ New</button>
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:0">
+        <label>Tags (comma separated)</label>
+        <input type="text" id="photo-tags" placeholder="e.g. school, morning, self-care"/>
+      </div>
+      <div id="upload-name-fields" style="margin-top:14px"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal('modal-photo')">Cancel</button>
+      <button class="btn btn-primary" onclick="savePhotos()">Add to Library</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: PREVIEW -->
+<div class="modal-backdrop" id="modal-preview">
+  <div class="preview-modal">
+    <div class="modal-head"><h2 id="preview-title">Task Preview</h2><button class="modal-close" onclick="closeModal('modal-preview')">✕</button></div>
+    <div class="modal-body" id="preview-body"></div>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('modal-preview')">Close Preview</button></div>
+  </div>
+</div>
+
+<!-- ═══ VIEW: OBJECTIVES ═══ -->
+<div class="view active" id="view-dashboard">
+  <div class="page">
+    <div class="page-head">
+      <div><h1>Objectives</h1><p>Build and manage your program objectives</p></div>
+      <button class="btn btn-primary" onclick="gotoView('builder')">+ New Objective</button>
+    </div>
+    <div class="stats-bar">
+      <div class="stat"><div class="stat-num" id="s-objs">0</div><div class="stat-lbl">Objectives</div></div>
+      <div class="stat"><div class="stat-num" id="s-tasks">0</div><div class="stat-lbl">Total Tasks</div></div>
+      <div class="stat"><div class="stat-num" id="s-students">0</div><div class="stat-lbl">Students</div></div>
+      <div class="stat"><div class="stat-num" id="s-sessions">0</div><div class="stat-lbl">Sessions Run</div></div>
+    </div>
+    <div class="obj-list" id="obj-list"></div>
+  </div>
+</div>
+
+<!-- ═══ VIEW: STUDENTS ═══ -->
+<div class="view" id="view-students">
+  <div class="page">
+    <div class="page-head">
+      <div><h1>Students</h1><p>Profiles, assigned objectives and session history</p></div>
+      <button class="btn btn-primary" onclick="openAddStudent()">+ Add Student</button>
+    </div>
+    <div class="student-grid" id="student-grid"></div>
+  </div>
+</div>
+
+<!-- ═══ VIEW: PROFILE ═══ -->
+<div class="view" id="view-profile">
+  <div class="page">
+    <div class="page-head">
+      <div><h1 id="profile-title">Student Profile</h1><p id="profile-subtitle"></p></div>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-ghost" onclick="gotoView('students')">← Students</button>
+        <button class="btn btn-yellow" onclick="exportCSV()">⬇ Export Data Sheet</button>
+      </div>
+    </div>
+    <div class="profile-layout" id="profile-layout"></div>
+  </div>
+</div>
+
+<!-- ═══ VIEW: BUILDER ═══ -->
+<div class="view" id="view-builder">
+  <div class="page">
+    <div class="page-head">
+      <div><h1>Build Objective</h1><p>Define your objective then add tasks</p></div>
+      <button class="btn btn-ghost" onclick="gotoView('dashboard')">← Back</button>
+    </div>
+    <div class="builder-wrap">
+      <div>
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Objective Info</div></div>
+          <div class="panel-body">
+            <div style="display:grid;grid-template-columns:120px 1fr;gap:14px;">
+              <div class="form-group" style="margin:0"><label>ID</label><input type="text" id="obj-id" placeholder="001" maxlength="6"/></div>
+              <div class="form-group" style="margin:0"><label>Name</label><input type="text" id="obj-name" placeholder="e.g. Morning Routine Sequencing"/></div>
+            </div>
+            <div class="form-group" style="margin-top:14px;margin-bottom:0"><label>Description (optional)</label><input type="text" id="obj-desc" placeholder="Brief description"/></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Tasks</div><button class="btn btn-primary btn-sm" onclick="addTaskCard()">+ Add Task</button></div>
+          <div class="panel-body"><div id="task-cards-wrap"><div class="empty" id="tasks-empty"><div class="e-ico">📋</div>Click "Add Task" to begin</div></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Item Library</div></div>
+          <div class="panel-body">
+            <div class="lib-section-head" id="lib-filters"></div>
+            <div class="lib-grid-mini" id="lib-grid-mini"></div>
+            <div style="margin-top:12px;font-size:0.75rem;color:var(--muted)">Select items, then use buttons inside each task to assign roles.</div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Save</div></div>
+          <div class="panel-body">
+            <button class="btn btn-primary" style="width:100%;justify-content:center;margin-bottom:10px" onclick="saveObjective()">Save Objective</button>
+            <button class="btn btn-ghost" style="width:100%;justify-content:center" onclick="resetBuilder()">Clear All</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// CONSTANTS & LIBRARY
+// ═══════════════════════════════════════
+const TASK_TYPES = {
+  identification: { label:'Identification', icon:'🖼️', desc:'Touch / identify the correct picture' },
+  matching:       { label:'Matching',       icon:'🔗', desc:'Match images to words or images to images' },
+  sequencing:     { label:'Sequencing',     icon:'📋', desc:'Arrange steps in the correct order' },
+};
+
+const LIBRARY = {
+  animals:[
+    {id:'cat',word:'Cat',variants:['🐱','😺','🐈','🐾','😸']},
+    {id:'dog',word:'Dog',variants:['🐶','🐕','🦮','🐩','🐕‍🦺']},
+    {id:'cow',word:'Cow',variants:['🐮','🐄','🐂','🥛','🐃']},
+    {id:'pig',word:'Pig',variants:['🐷','🐖','🐽','🥓','🐗']},
+    {id:'bird',word:'Bird',variants:['🐦','🦜','🐧','🦅','🦢']},
+    {id:'fish',word:'Fish',variants:['🐟','🐠','🐡','🎣','🦈']},
+    {id:'lion',word:'Lion',variants:['🦁','🐆','🐅','🦊','🐺']},
+    {id:'bear',word:'Bear',variants:['🐻','🐼','🧸','🐨','🦝']},
+  ],
+  objects:[
+    {id:'apple',word:'Apple',variants:['🍎','🍏','🍑','🍒','🍓']},
+    {id:'car',word:'Car',variants:['🚗','🚕','🚙','🏎','🚓']},
+    {id:'house',word:'House',variants:['🏠','🏡','🏘','🏗','🏚']},
+    {id:'book',word:'Book',variants:['📚','📖','📕','📗','📘']},
+    {id:'ball',word:'Ball',variants:['⚽','🏀','🏈','⚾','🎾']},
+    {id:'cup',word:'Cup',variants:['☕','🍵','🥤','🍶','🧃']},
+    {id:'star',word:'Star',variants:['⭐','🌟','✨','💫','🌠']},
+    {id:'sun',word:'Sun',variants:['☀️','🌞','🌤','🔆','🌻']},
+  ],
+  emotions:[
+    {id:'happy',word:'Happy',variants:['😊','😄','🥰','😁','🤩']},
+    {id:'sad',word:'Sad',variants:['😢','😭','😞','😔','🥺']},
+    {id:'angry',word:'Angry',variants:['😠','😡','🤬','😤','💢']},
+    {id:'scared',word:'Scared',variants:['😨','😱','😰','🫣','😧']},
+    {id:'tired',word:'Tired',variants:['😴','🥱','😪','💤','🫠']},
+    {id:'silly',word:'Silly',variants:['🤪','😜','🤡','😝','👻']},
+  ],
+  letters:[
+    {id:'letA',word:'A',variants:['🅰️','🔠','📝','✏️','🖊️']},
+    {id:'letB',word:'B',variants:['🅱️','🔡','📓','📒','📔']},
+    {id:'letC',word:'C',variants:['©️','🔤','📋','📃','📄']},
+    {id:'num1',word:'1',variants:['1️⃣','☝️','🥇','🔢','📍']},
+    {id:'num2',word:'2',variants:['2️⃣','✌️','🥈','📌','🔣']},
+    {id:'num3',word:'3',variants:['3️⃣','🤟','🥉','📎','🧮']},
+    {id:'num4',word:'4',variants:['4️⃣','🖐️','4️⃣','🔑','🎯']},
+    {id:'num5',word:'5',variants:['5️⃣','🖐','5️⃣','🌟','🎖️']},
+  ],
+  clothing:[
+    {id:'shirt',word:'Shirt',variants:['👕','🥼','👔','🧥','👗']},
+    {id:'pants',word:'Pants',variants:['👖','🩲','🩳','👕','🧤']},
+    {id:'shoes',word:'Shoes',variants:['👟','👠','👡','👢','🥿']},
+    {id:'hat',word:'Hat',variants:['🧢','👒','🎩','⛑️','🪖']},
+    {id:'gloves',word:'Gloves',variants:['🧤','🤏','✋','🖐️','👐']},
+    {id:'socks',word:'Socks',variants:['🧦','👣','🦶','👟','🩴']},
+  ],
+  actions:[
+    {id:'run',word:'Running',variants:['🏃','🏃‍♂️','🏃‍♀️','🚶','🧗']},
+    {id:'eat',word:'Eating',variants:['🍽️','🥄','🍴','🥢','🫕']},
+    {id:'sleep',word:'Sleeping',variants:['😴','🛏️','🌙','💤','🛌']},
+    {id:'play',word:'Playing',variants:['🎮','🧸','⚽','🎲','🪁']},
+    {id:'read',word:'Reading',variants:['📖','📚','🔍','👓','📝']},
+    {id:'wash',word:'Washing',variants:['🚿','🧼','🫧','🪥','🛁']},
+  ],
+  prepositions:[
+    {id:'in',word:'In',variants:['📦','🗃️','📥','🫙','🎁']},
+    {id:'on',word:'On',variants:['⬆️','🔝','📤','🏔️','🪨']},
+    {id:'under',word:'Under',variants:['⬇️','🔽','📥','🕳️','🌊']},
+    {id:'next',word:'Next To',variants:['↔️','🤝','👫','🪑','🛋️']},
+    {id:'behind',word:'Behind',variants:['🔙','◀️','⬅️','🫣','🏃']},
+    {id:'front',word:'In Front',variants:['🔜','▶️','➡️','🫵','👉']},
+  ],
+  shapes:[
+    {id:'circle',word:'Circle',variants:['⭕','🔵','🟠','🔴','🟡']},
+    {id:'square',word:'Square',variants:['🟦','🟥','🟨','🟩','⬛']},
+    {id:'triangle',word:'Triangle',variants:['🔺','🔻','📐','🗻','⛰️']},
+    {id:'star_shape',word:'Star',variants:['⭐','🌟','✨','💫','🌠']},
+    {id:'heart',word:'Heart',variants:['❤️','🧡','💛','💚','💙']},
+    {id:'diamond',word:'Diamond',variants:['💎','🔷','🔶','🔹','🔸']},
+  ],
+  sequences:[
+    {id:'makebed',word:'Make Bed',variants:['🛏️','🛌','🪣','🧹','🛋️']},
+    {id:'brushteeth',word:'Brush Teeth',variants:['🪥','😁','🦷','🧴','💧']},
+    {id:'washface',word:'Wash Face',variants:['🚿','🧼','💦','🫧','🪣']},
+    {id:'getdressed',word:'Get Dressed',variants:['👕','🧥','👗','👔','🪡']},
+    {id:'eatbreakfast',word:'Eat Breakfast',variants:['🥣','🍳','🥞','🍞','🥐']},
+    {id:'backpack',word:'Pack Bag',variants:['🎒','📚','✏️','📓','🗂️']},
+    {id:'boardbus',word:'Board Bus',variants:['🚌','🚎','🏫','🎫','🛑']},
+    {id:'washhands',word:'Wash Hands',variants:['🤲','🧼','💧','🫧','🚿']},
+    {id:'puton',word:'Put On Shoes',variants:['👟','👠','🩴','👢','🥿']},
+    {id:'flush',word:'Flush Toilet',variants:['🚽','💧','🪣','🔄','🚿']},
+  ],
+  food:[
+    {id:'pizza',word:'Pizza',variants:['🍕','🧀','🫕','🥘','🍔']},
+    {id:'cake',word:'Cake',variants:['🎂','🍰','🧁','🍩','🍪']},
+    {id:'water',word:'Water',variants:['💧','🌊','🚿','🫗','🧊']},
+    {id:'milk',word:'Milk',variants:['🥛','🍼','🐄','🫙','🧃']},
+  ]
+};
+
+const CAT_LABELS={animals:'🐾 Animals',objects:'🏠 Objects',emotions:'😊 Emotions',letters:'🔤 Letters & Numbers',clothing:'👕 Clothing',actions:'🏃 Actions',prepositions:'📍 Prepositions',shapes:'🔷 Shapes',sequences:'📋 Sequences',food:'🍕 Food'};
+
+// ═══════════════════════════════════
+// PHOTO LIBRARY
+// ═══════════════════════════════════
+let customCategories=[];
+let activeCatFilter='All';
+let uploadedPhotos=[]; // {id,name,src,category,tags}
+let pendingUploads=[]; // {src,name,file}
+
+function allCategories(){
+  return['All',...Object.keys(LIBRARY),...customCategories];
+}
+
+function promptNewCategory(){
+  const name=prompt('New category name:');
+  if(!name||!name.trim())return;
+  const n=name.trim();
+  if(!customCategories.includes(n))customCategories.push(n);
+  refreshPhotoCatSelect();
+  renderPhotoLibrary();
+  showToast('✓ Category "'+n+'" added');
+}
+
+function refreshPhotoCatSelect(){
+  const sel=document.getElementById('photo-cat');
+  if(!sel)return;
+  const cats=[...Object.keys(LIBRARY),...customCategories];
+  sel.innerHTML=cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+}
+
+function openAddPhoto(){
+  pendingUploads=[];
+  document.getElementById('upload-previews').innerHTML='';
+  document.getElementById('upload-name-fields').innerHTML='';
+  document.getElementById('photo-tags').value='';
+  refreshPhotoCatSelect();
+  openModal('modal-photo');
+}
+
+function handleFileSelect(event){
+  Array.from(event.target.files).forEach(readFile);
+  event.target.value='';
+}
+function handleDrop(event){
+  event.preventDefault();
+  document.getElementById('upload-zone').classList.remove('dragover');
+  Array.from(event.dataTransfer.files).filter(f=>f.type.startsWith('image/')).forEach(readFile);
+}
+function readFile(file){
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const src=e.target.result;
+    const name=file.name.replace(/\.[^.]+$/,'').replace(/[-_]/g,' ');
+    pendingUploads.push({src,name});
+    renderUploadPreviews();
+  };
+  reader.readAsDataURL(file);
+}
+function renderUploadPreviews(){
+  document.getElementById('upload-previews').innerHTML=pendingUploads.map((u,i)=>
+    `<div style="text-align:center"><img src="${u.src}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;border:1.5px solid var(--border);display:block;margin-bottom:4px"><span style="font-size:0.68rem;color:var(--muted)">${u.name}</span></div>`
+  ).join('');
+  document.getElementById('upload-name-fields').innerHTML=pendingUploads.length>0?
+    `<label>Labels (one per photo)</label>`+pendingUploads.map((u,i)=>
+      `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><img src="${u.src}" style="width:36px;height:36px;object-fit:cover;border-radius:6px"><input type="text" id="uname-${i}" value="${u.name}" placeholder="Label for this photo" style="flex:1"/></div>`
+    ).join(''):'';
+}
+function savePhotos(){
+  if(!pendingUploads.length){showToast('No photos selected');return;}
+  const cat=document.getElementById('photo-cat').value||'Custom';
+  const tags=document.getElementById('photo-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
+  pendingUploads.forEach((u,i)=>{
+    const nameEl=document.getElementById('uname-'+i);
+    const name=(nameEl?nameEl.value.trim():u.name)||u.name;
+    uploadedPhotos.push({id:'custom-'+Date.now()+'-'+i,name,src:u.src,category:cat,tags,isCustom:true});
+  });
+  pendingUploads=[];
+  closeModal('modal-photo');
+  renderPhotoLibrary();
+  showToast('✓ '+uploadedPhotos.length+' photos saved');
+}
+function deleteUploadedPhoto(id){
+  uploadedPhotos=uploadedPhotos.filter(p=>p.id!==id);
+  renderPhotoLibrary();
+  showToast('Photo removed');
+}
+
+function renderPhotoLibrary(){
+  const search=(document.getElementById('photo-search')||{}).value?.toLowerCase()||'';
+  // Sidebar
+  const allCats=['All',...Object.keys(LIBRARY),...customCategories];
+  const sidebarEl=document.getElementById('cat-sidebar-list');
+  if(sidebarEl){
+    sidebarEl.innerHTML=allCats.map(c=>{
+      const count=c==='All'?uploadedPhotos.length:uploadedPhotos.filter(p=>p.category===c).length;
+      return`<div class="cat-item ${activeCatFilter===c?'active':''}" onclick="activeCatFilter='${c}';renderPhotoLibrary()">
+        ${c} <span class="cat-count">${count}</span>
+      </div>`;
+    }).join('');
+  }
+  // Grid — only show custom uploaded photos
+  let photos=[...uploadedPhotos];
+  if(activeCatFilter!=='All') photos=photos.filter(p=>p.category===activeCatFilter);
+  if(search) photos=photos.filter(p=>p.name.toLowerCase().includes(search)||p.tags.some(t=>t.includes(search)));
+  const grid=document.getElementById('photo-grid');
+  if(!grid)return;
+  if(!photos.length){
+    grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="e-ico">📷</div>${uploadedPhotos.length?'No photos match your search.':'No custom photos yet. Click "Upload Photos" to add your own.'}</div>`;
+    return;
+  }
+  grid.innerHTML=photos.map(p=>`
+    <div class="photo-card">
+      <img src="${p.src}" alt="${p.name}"/>
+      <button class="photo-card-del" onclick="deleteUploadedPhoto('${p.id}')">✕</button>
+      <div class="photo-card-info">
+        <div class="photo-card-name">${p.name}</div>
+        <div class="photo-card-cat">${p.category}</div>
+        ${p.tags.length?`<div style="display:flex;flex-wrap:wrap;gap:3px;margin-top:3px">${p.tags.map(t=>`<span style="font-size:0.6rem;padding:1px 5px;background:#ede9e0;border-radius:6px;color:var(--muted)">${t}</span>`).join('')}</div>`:''}
+      </div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════
+// MASTERY CRITERIA HELPERS
+// ═══════════════════════════════════
+function getMasteryStatus(objId,studentId){
+  const obj=objectives.find(o=>o.id===objId);if(!obj||!obj.mastery)return'not-started';
+  const logs=sessionLogs.filter(l=>l.studentId===studentId&&l.objId===objId).sort((a,b)=>b.date.localeCompare(a.date));
+  if(!logs.length)return'not-started';
+  const req=obj.mastery.sessions||3;
+  const thr=obj.mastery.pct||80;
+  if(logs.length<req)return'in-progress';
+  const allMet=logs.slice(0,req).every(l=>l.total>0&&(l.correct/l.total*100)>=thr);
+  return allMet?'mastered':'in-progress';
+}
+function masteryBadge(status){
+  const m={
+    'not-started':{cls:'mastery-not-started',ico:'⬜',lbl:'Not Started'},
+    'in-progress':{cls:'mastery-in-progress',ico:'🔄',lbl:'In Progress'},
+    'mastered':{cls:'mastery-mastered',ico:'✅',lbl:'Mastered'},
+  }[status]||{cls:'mastery-not-started',ico:'⬜',lbl:'—'};
+  return`<span class="mastery-badge ${m.cls}">${m.ico} ${m.lbl}</span>`;
+}
+
+const PROMPT_SUGGESTIONS=[
+  {threshold:90,msg:'Excellent! Try fading to no prompts — student is near independence.'},
+  {threshold:75,msg:'Good accuracy — consider fading to gestural prompts only.'},
+  {threshold:55,msg:'Moderate accuracy — verbal or gestural prompts recommended.'},
+  {threshold:0, msg:'Lower accuracy — physical or full physical prompts may be needed.'},
+];
+function getPromptSuggestion(pct){
+  for(const s of PROMPT_SUGGESTIONS){if(pct>=s.threshold)return s.msg;}
+  return PROMPT_SUGGESTIONS[PROMPT_SUGGESTIONS.length-1].msg;
+}
+
+// ═══════════════════════════════════
+// BUILDER ENHANCEMENTS
+// ═══════════════════════════════════
+// ── Drag to reorder ──
+let dragSrcId=null;
+function initDragEvents(tid){
+  const card=document.getElementById('tbc-'+tid);if(!card)return;
+  card.setAttribute('draggable','true');
+  card.addEventListener('dragstart',()=>{dragSrcId=tid;card.style.opacity='0.5';});
+  card.addEventListener('dragend',()=>{card.style.opacity='1';document.querySelectorAll('.task-build-card').forEach(c=>c.classList.remove('drag-over'));});
+  card.addEventListener('dragover',e=>{e.preventDefault();if(dragSrcId!==tid)card.classList.add('drag-over');});
+  card.addEventListener('dragleave',()=>card.classList.remove('drag-over'));
+  card.addEventListener('drop',e=>{
+    e.preventDefault();card.classList.remove('drag-over');
+    if(dragSrcId===tid)return;
+    const fromIdx=bTasks.findIndex(t=>t.id===dragSrcId);
+    const toIdx=bTasks.findIndex(t=>t.id===tid);
+    if(fromIdx===-1||toIdx===-1)return;
+    const [moved]=bTasks.splice(fromIdx,1);bTasks.splice(toIdx,0,moved);
+    rerenderAllTaskCards();
+  });
+}
+function rerenderAllTaskCards(){
+  const wrap=document.getElementById('task-cards-wrap');
+  wrap.innerHTML='';
+  bTasks.forEach((t,i)=>{
+    const card=document.createElement('div');
+    card.className='task-build-card';card.id='tbc-'+t.id;
+    card.innerHTML=buildTaskCardHTML(t.id,i);
+    wrap.appendChild(card);
+    initDragEvents(t.id);
+  });
+}
+
+// ── Duplicate task ──
+function duplicateTask(tid){
+  const idx=bTasks.findIndex(t=>t.id===tid);if(idx===-1)return;
+  taskCounter++;
+  const orig=bTasks[idx];
+  const copy=JSON.parse(JSON.stringify(orig));
+  copy.id='task-'+taskCounter;
+  bTasks.splice(idx+1,0,copy);
+  rerenderAllTaskCards();
+  showToast('✓ Task duplicated');
+}
+
+// ── Preview task ──
+function previewTask(tid){
+  const idx=bTasks.findIndex(t=>t.id===tid);if(idx===-1)return;
+  const t=bTasks[idx];
+  let body='';
+  if(t.type==='identification'){
+    const items=t.items||[];
+    body=`<div style="margin-bottom:16px"><div style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px">Student sees this instruction:</div><div style="font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;background:#faf8f4;padding:12px 24px;border-radius:12px;border:2px solid var(--border);display:inline-block;margin-bottom:20px">${t.instruction||'(no instruction set)'}</div></div>
+    <div style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px">Picture cards (${items.length}):</div>
+    <div class="preview-pic-grid">${items.map(item=>`
+      <div class="preview-pic ${item.isTarget?'is-target':''}">
+        ${renderItemMedia(item.id,0,64)}
+        <div style="font-size:0.82rem;font-weight:700">${item.word}</div>
+        <span class="chip ${item.isTarget?'chip-blue':'chip-green'}" style="font-size:0.65rem">${item.isTarget?'TARGET':'DISTRACTOR'}</span>
+      </div>`).join('')}
+    </div>`;
+  } else if(t.type==='sequencing'){
+    const steps=t.steps||[];
+    body=`<div style="margin-bottom:16px"><div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;background:#faf8f4;padding:12px 24px;border-radius:12px;border:2px solid var(--border);display:inline-block;margin-bottom:20px">${t.instruction||'(no instruction)'}</div></div>
+    <div style="font-size:0.75rem;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.08em">Correct order (student sees these shuffled):</div>
+    <div style="display:flex;flex-direction:column;gap:8px;max-width:360px">
+    ${steps.map((s,i)=>`<div style="display:flex;align-items:center;gap:12px;background:#faf8f4;border:1.5px solid var(--border);border-radius:10px;padding:10px 14px"><span style="width:24px;height:24px;border-radius:50%;background:var(--yellow);color:#fff;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:800;flex-shrink:0">${i+1}</span>${renderItemMedia(s.id,0,32)}<span style="font-weight:700;font-size:0.88rem">${s.word}</span></div>`).join('')}
+    </div>`;
+  } else if(t.type==='matching'){
+    const pairs=t.pairs||[];
+    body=`<div style="margin-bottom:16px"><div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;background:#faf8f4;padding:12px 24px;border-radius:12px;border:2px solid var(--border);display:inline-block;margin-bottom:20px">${t.instruction||'(no instruction)'}</div></div>
+    <div style="font-size:0.75rem;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.08em">Pairs to match:</div>
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center">
+    ${pairs.map(p=>`${renderItemMedia(p.id,0,48)}<span style="color:var(--muted)">↔</span><span style="font-family:'Syne',sans-serif;font-weight:700;font-size:1rem">${p.word}</span>`).join('')}
+    </div>`;
+  }
+  document.getElementById('preview-title').textContent='Preview — Task '+(idx+1)+': "'+t.instruction+'"';
+  document.getElementById('preview-body').innerHTML=body||'<p style="color:var(--muted)">Nothing to preview yet — add items first.</p>';
+  openModal('modal-preview');
+}
+
+// ── Mastery criteria block ──
+function renderMasteryCriteria(tid,idx){
+  const t=bTasks[idx];
+  const pct=t.masteryCriteria?.pct??80;
+  const sess=t.masteryCriteria?.sessions??3;
+  return`<div class="mastery-criteria-block">
+    <div class="mastery-criteria-title">🎯 Mastery Criteria</div>
+    <div class="mastery-row">
+      <label>Target accuracy</label>
+      <input type="range" min="50" max="100" step="5" value="${pct}" oninput="updateMastery('${tid}',${idx},'pct',parseInt(this.value));document.getElementById('mpct-${tid}').textContent=this.value+'%'"/>
+      <span class="mastery-val" id="mpct-${tid}">${pct}%</span>
+    </div>
+    <div class="mastery-row">
+      <label>Across sessions</label>
+      <input type="range" min="1" max="10" step="1" value="${sess}" oninput="updateMastery('${tid}',${idx},'sessions',parseInt(this.value));document.getElementById('msess-${tid}').textContent=this.value"/>
+      <span class="mastery-val" id="msess-${tid}">${sess}</span>
+    </div>
+    <div style="font-size:0.75rem;color:var(--muted);margin-top:4px">Student must achieve ${pct}% accuracy across ${sess} consecutive session${sess!==1?'s':''}</div>
+  </div>`;
+}
+function updateMastery(tid,_unused,key,val){
+  const idx=bTasks.findIndex(t=>t.id===tid);if(idx===-1)return;
+  if(!bTasks[idx].masteryCriteria)bTasks[idx].masteryCriteria={pct:80,sessions:3};
+  bTasks[idx].masteryCriteria[key]=val;
+}
+
+// ── library with custom photos ──
+function libItemsForFilter(){
+  const search=(document.getElementById('lib-search')||{}).value?.toLowerCase()||'';
+  if(libFilter==='My Photos'){
+    let items=[...uploadedPhotos];
+    if(search)items=items.filter(p=>p.name.toLowerCase().includes(search)||(p.tags||[]).some(t=>t.toLowerCase().includes(search)));
+    return items.map(p=>({id:p.id,word:p.name,isCustom:true,src:p.src}));
+  }
+  let items=[...(LIBRARY[libFilter]||[])];
+  if(search)items=items.filter(i=>i.word.toLowerCase().includes(search));
+  return items;
+}
+
+const AVATARS=['🧒','👦','👧','🧑','👩','👨','🧓','👶','🐣','🦊','🐻','🐼','🐸','🦄','🌟','⭐','🎈','🌈'];
+const PROMPTS=['Independent','Gestural','Verbal','Physical','Full Physical'];
+const PROMPT_ABBR={Independent:'IND',Gestural:'GEST',Verbal:'VERB',Physical:'PHYS','Full Physical':'FP'};
+const PROMPT_COLOR={Independent:'#4a8a55',Gestural:'#4a7fc1',Verbal:'#8a6e1c',Physical:'#c05c4a','Full Physical':'#8b4444'};
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+let objectives=[], students=[], sessionLogs=[], totalSessions=0;
+let bTasks=[], taskCounter=0, libFilter='My Photos', libChosen=[];
+let rObj=null, rStudent=null, rTaskIdx=0, rTrialIdx=0, rTrials=[];
+let rCurrentPrompt='Independent', rSessionLog=null, rTrialLog=[];
+let editingStudentId=null, assigningStudentId=null, selectedAvatar='🧒', viewingStudentId=null;
+
+// matching runner state
+let rMatchLeft=[], rMatchRight=[], rMatchSelected=null, rMatchSide=null, rMatchDone=[];
+// sequencing runner state
+let rSeqSlots=[], rSeqChoices=[], rSeqCorrectOrder=[];
+
+// ═══════════════════════════════════════
+// SEED
+// ═══════════════════════════════════════
+function seed(){
+  objectives=[
+    {
+      id:'obj-001',code:'001',
+      name:'Picture Identification — Animals',
+      desc:'Receptively identify animals when named.',
+      tasks:[
+        {type:'identification',instruction:'Touch the cat',items:[{id:'cat',word:'Cat',variantUsed:0,isTarget:true},{id:'dog',word:'Dog',variantUsed:0,isTarget:false},{id:'bird',word:'Bird',variantUsed:0,isTarget:false}],numPicsShown:3,multiSelect:false,correctCount:1},
+        {type:'identification',instruction:'Touch the cat',items:[{id:'cat',word:'Cat',variantUsed:1,isTarget:true},{id:'dog',word:'Dog',variantUsed:1,isTarget:false},{id:'cow',word:'Cow',variantUsed:0,isTarget:false},{id:'pig',word:'Pig',variantUsed:0,isTarget:false}],numPicsShown:4,multiSelect:false,correctCount:1},
+        {type:'identification',instruction:'Touch the cat and the dog',items:[{id:'cat',word:'Cat',variantUsed:2,isTarget:true},{id:'dog',word:'Dog',variantUsed:2,isTarget:true},{id:'cow',word:'Cow',variantUsed:1,isTarget:false},{id:'pig',word:'Pig',variantUsed:1,isTarget:false},{id:'bird',word:'Bird',variantUsed:1,isTarget:false}],numPicsShown:5,multiSelect:true,correctCount:2},
+      ]
+    },
+    {
+      id:'obj-002',code:'002',
+      name:'Morning Routine Sequencing',
+      desc:'Student arranges morning routine steps in the correct order.',
+      tasks:[
+        {type:'sequencing',instruction:'Put the morning routine in order',steps:[{id:'makebed',word:'Make Bed',variantUsed:0},{id:'brushteeth',word:'Brush Teeth',variantUsed:0},{id:'washface',word:'Wash Face',variantUsed:0},{id:'getdressed',word:'Get Dressed',variantUsed:0},{id:'eatbreakfast',word:'Eat Breakfast',variantUsed:0}]},
+        {type:'sequencing',instruction:'Now add packing your bag',steps:[{id:'makebed',word:'Make Bed',variantUsed:0},{id:'brushteeth',word:'Brush Teeth',variantUsed:0},{id:'washface',word:'Wash Face',variantUsed:0},{id:'getdressed',word:'Get Dressed',variantUsed:0},{id:'eatbreakfast',word:'Eat Breakfast',variantUsed:0},{id:'backpack',word:'Pack Bag',variantUsed:0}]},
+      ]
+    },
+    {
+      id:'obj-003',code:'003',
+      name:'Animal Matching',
+      desc:'Match animal pictures to their word labels.',
+      tasks:[
+        {type:'matching',instruction:'Match each animal to its name',pairs:[{id:'cat',word:'Cat',variantUsed:0},{id:'dog',word:'Dog',variantUsed:0},{id:'cow',word:'Cow',variantUsed:0}]},
+        {type:'matching',instruction:'Match these animals',pairs:[{id:'bird',word:'Bird',variantUsed:0},{id:'fish',word:'Fish',variantUsed:0},{id:'lion',word:'Lion',variantUsed:0},{id:'bear',word:'Bear',variantUsed:0}]},
+      ]
+    }
+  ];
+  students=[
+    {id:'s1',name:'Marcus T.',dob:'2018-04-12',notes:'ASD Level 2. Responds well to visual supports. Prefers gestural prompts.',avatar:'👦',assignedObjectives:['obj-001','obj-002']},
+    {id:'s2',name:'Lily R.',dob:'2017-09-03',notes:'ASD Level 1, verbal. Strong visual learner.',avatar:'👧',assignedObjectives:['obj-001','obj-003']},
+  ];
+  const base=new Date(); base.setDate(base.getDate()-6);
+  ['s1','s2'].forEach((sid,si)=>{
+    for(let d=0;d<4;d++){
+      const dt=new Date(base); dt.setDate(dt.getDate()+d);
+      const correct=Math.floor(Math.random()*4)+5;
+      sessionLogs.push({id:'log-'+Date.now()+d+si,studentId:sid,objId:'obj-00'+(si===0?1:1),date:dt.toISOString().split('T')[0],tasks:[{taskIdx:0,trials:[{trial:1,correct:Math.random()>0.3,prompt:PROMPTS[Math.floor(Math.random()*2)],itemWord:'Cat'},{trial:2,correct:Math.random()>0.2,prompt:'Independent',itemWord:'Cat'},{trial:3,correct:true,prompt:'Independent',itemWord:'Cat'}]}],correct,total:9});
+      totalSessions++;
+    }
+  });
+}
+seed();
+
+// ═══════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════
+function shuffle(a){const arr=[...a];for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+function getItem(id){
+  // Check emoji library first
+  for(const cat of Object.values(LIBRARY)){const f=cat.find(x=>x.id===id);if(f)return f;}
+  // Then check uploaded photos
+  const up=uploadedPhotos.find(p=>p.id===id);
+  if(up)return{id:up.id,word:up.name,src:up.src,isCustom:true};
+  return null;
+}
+function getVariant(id,vIdx){
+  const item=getItem(id);
+  if(!item)return'❓';
+  if(item.src)return null; // custom photo — use src instead
+  return item.variants?.[vIdx%item.variants.length]||'❓';
+}
+function renderMedia(id,vIdx,size){
+  // Universal media renderer for builder and runner
+  size=size||64;
+  const item=getItem(id);
+  if(!item)return`<span style="font-size:${Math.round(size*0.55)}px">❓</span>`;
+  if(item.src)return`<img src="${item.src}" style="width:${size}px;height:${size}px;object-fit:cover;border-radius:${Math.round(size/6)}px;display:block">`;
+  const em=item.variants?.[vIdx%item.variants.length]||'❓';
+  return`<span style="font-size:${Math.round(size*0.55)}px;line-height:1;display:block">${em}</span>`;
+}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400);}
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function calcAge(dob){if(!dob)return'?';const b=new Date(dob),n=new Date();let a=n.getFullYear()-b.getFullYear();if(n<new Date(n.getFullYear(),b.getMonth(),b.getDate()))a--;return a;}
+function pctBadge(pct){const c=pct>=80?'pct-high':pct>=60?'pct-mid':'pct-low';return`<span class="pct-badge ${c}">${pct}%</span>`;}
+function fmtDate(d){if(!d)return'—';return new Date(d+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
+function typeChip(type){const t=TASK_TYPES[type]||{};return`<span class="chip chip-blue">${t.icon||''} ${t.label||type}</span>`;}
+
+// ═══════════════════════════════════════
+// NAV
+// ═══════════════════════════════════════
+function gotoView(v){
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
+  document.getElementById('view-'+v).classList.add('active');
+  document.querySelectorAll('.npill').forEach(el=>el.classList.remove('active'));
+  const idx={dashboard:0,students:1,profile:1,photos:2,builder:3};
+  document.querySelectorAll('.npill')[idx[v]??0]?.classList.add('active');
+  if(v==='dashboard')renderDashboard();
+  if(v==='photos')renderPhotoLibrary();
+  if(v==='students')renderStudents();
+  if(v==='builder')renderBuilder();
+}
+
+// ═══════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════
+function renderDashboard(){
+  document.getElementById('s-objs').textContent=objectives.length;
+  document.getElementById('s-tasks').textContent=objectives.reduce((s,o)=>s+o.tasks.length,0);
+  document.getElementById('s-students').textContent=students.length;
+  document.getElementById('s-sessions').textContent=totalSessions;
+  const list=document.getElementById('obj-list');
+  if(!objectives.length){list.innerHTML=`<div class="empty"><div class="e-ico">🎯</div>No objectives yet. Click "New Objective" to start.</div>`;return;}
+  list.innerHTML=objectives.map(obj=>`
+    <div class="obj-card">
+      <div class="obj-header" id="ohdr-${obj.id}" onclick="toggleObj('${obj.id}')">
+        <div class="obj-badge">OBJ ${obj.code}</div>
+        <div style="flex:1"><div class="obj-name">${obj.name}</div>${obj.desc?`<div class="obj-meta">${obj.desc}</div>`:''}</div>
+        <div class="obj-meta" style="margin-right:8px">${obj.tasks.length} task${obj.tasks.length!==1?'s':''}</div>
+        <button class="btn btn-red btn-xs" onclick="event.stopPropagation();deleteObj('${obj.id}')">Delete</button>
+        <div class="obj-chevron" id="chev-${obj.id}">▼</div>
+      </div>
+      <div id="obj-body-${obj.id}" style="display:none">
+        <div class="task-rows">
+          ${obj.tasks.map((t,ti)=>`
+            <div class="task-row">
+              <div class="task-num">${ti+1}</div>
+              <div class="task-info">
+                <h4>"${t.instruction}"</h4>
+                <p>${t.type==='sequencing'?`${t.steps?.length||0} steps to order`:t.type==='matching'?`${t.pairs?.length||0} pairs to match`:`${t.items?.length||0} pictures · ${t.multiSelect?'Select '+t.correctCount:'Select 1 correct'}`}</p>
+              </div>
+              <div class="task-chips">${typeChip(t.type)}</div>
+            </div>
+          `).join('')}
+        </div>
+        <div class="run-session-btn">
+          ${(()=>{
+            const assigned=students.filter(s=>s.assignedObjectives.includes(obj.id));
+            if(!assigned.length) return `<span style="font-size:0.82rem;color:var(--muted);font-style:italic">No students assigned — go to Students to assign</span>`;
+            return `
+              <span style="font-size:0.82rem;color:var(--muted);font-weight:600;white-space:nowrap">Run with:</span>
+              <select id="student-select-${obj.id}" style="max-width:220px;padding:8px 12px;font-size:0.875rem;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:#faf8f4;color:var(--text);font-family:'DM Sans',sans-serif;cursor:pointer">
+                <option value="">Select student...</option>
+                ${assigned.map(s=>`<option value="${s.id}">${s.avatar} ${s.name}</option>`).join('')}
+              </select>
+              <button class="btn btn-primary btn-sm" onclick="runWithDropdown('${obj.id}')">▶ Run Session</button>
+            `;
+          })()}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleObj(id){
+  const body=document.getElementById('obj-body-'+id);
+  const hdr=document.getElementById('ohdr-'+id);
+  const chev=document.getElementById('chev-'+id);
+  const open=body.style.display==='block';
+  body.style.display=open?'none':'block';
+  hdr.classList.toggle('open',!open);
+  chev.classList.toggle('open',!open);
+}
+function deleteObj(id){objectives=objectives.filter(o=>o.id!==id);renderDashboard();}
+
+// ═══════════════════════════════════════
+// STUDENTS
+// ═══════════════════════════════════════
+function renderStudents(){
+  const grid=document.getElementById('student-grid');
+  if(!students.length){grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="e-ico">👤</div>No students yet.</div>`;return;}
+  grid.innerHTML=students.map(s=>{
+    const logs=sessionLogs.filter(l=>l.studentId===s.id).sort((a,b)=>b.date.localeCompare(a.date));
+    const last=logs[0];
+    const avgPct=logs.length?Math.round(logs.reduce((sum,l)=>sum+(l.total>0?l.correct/l.total*100:0),0)/logs.length):null;
+    return `<div class="student-card" onclick="viewStudent('${s.id}')">
+      <div class="student-card-top">
+        <div class="student-avatar">${s.avatar}</div>
+        <div><div class="student-name">${s.name}</div><div class="student-dob">Age ${calcAge(s.dob)} · ${s.assignedObjectives.length} objective${s.assignedObjectives.length!==1?'s':''}</div></div>
+      </div>
+      <div class="student-card-body">
+        <div class="sc-stat"><div class="sc-stat-num">${logs.length}</div><div class="sc-stat-lbl">Sessions</div></div>
+        <div class="sc-stat"><div class="sc-stat-num" style="color:var(--success)">${avgPct!==null?avgPct+'%':'—'}</div><div class="sc-stat-lbl">Avg Acc.</div></div>
+        <div class="sc-stat"><div class="sc-stat-num" style="font-size:0.82rem">${last?fmtDate(last.date):'Never'}</div><div class="sc-stat-lbl">Last Session</div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openAddStudent(){
+  editingStudentId=null; selectedAvatar='🧒';
+  document.getElementById('modal-student-title').textContent='Add Student';
+  document.getElementById('s-name').value='';
+  document.getElementById('s-dob').value='';
+  document.getElementById('s-notes').value='';
+  document.getElementById('avatar-preview').textContent='🧒';
+  renderAvatarPicker();
+  openModal('modal-student');
+}
+function renderAvatarPicker(){
+  document.getElementById('avatar-picker').innerHTML=AVATARS.map(a=>`<span class="avatar-opt ${a===selectedAvatar?'selected':''}" onclick="pickAvatar('${a}')">${a}</span>`).join('');
+}
+function toggleAvatarPicker(){const p=document.getElementById('avatar-picker');p.style.display=p.style.display==='none'?'flex':'none';}
+function pickAvatar(a){selectedAvatar=a;document.getElementById('avatar-preview').textContent=a;renderAvatarPicker();}
+function saveStudent(){
+  const name=document.getElementById('s-name').value.trim();
+  const dob=document.getElementById('s-dob').value;
+  const notes=document.getElementById('s-notes').value.trim();
+  if(!name){showToast('Enter student name');return;}
+  if(editingStudentId){const s=students.find(x=>x.id===editingStudentId);if(s){s.name=name;s.dob=dob;s.notes=notes;s.avatar=selectedAvatar;}}
+  else{students.push({id:'s'+Date.now(),name,dob,notes,avatar:selectedAvatar,assignedObjectives:[]});}
+  closeModal('modal-student');renderStudents();showToast('✓ Student saved');
+}
+
+function openAssign(studentId){
+  assigningStudentId=studentId;
+  const s=students.find(x=>x.id===studentId);
+  document.getElementById('obj-check-list').innerHTML=objectives.map(obj=>{
+    const checked=s.assignedObjectives.includes(obj.id);
+    return `<div class="obj-check-row ${checked?'checked':''}" id="ocr-${obj.id}" onclick="toggleObjCheck('${obj.id}')">
+      <input type="checkbox" ${checked?'checked':''} id="oc-${obj.id}" onclick="event.stopPropagation();toggleObjCheck('${obj.id}')"/>
+      <div><div class="obj-check-name">OBJ ${obj.code} — ${obj.name}</div><div class="obj-check-meta">${obj.tasks.length} tasks · ${obj.tasks.map(t=>TASK_TYPES[t.type]?.label||t.type).filter((v,i,a)=>a.indexOf(v)===i).join(', ')}</div></div>
+    </div>`;
+  }).join('') || '<p style="color:var(--muted);font-size:0.88rem">No objectives created yet.</p>';
+  openModal('modal-assign');
+}
+function toggleObjCheck(objId){const cb=document.getElementById('oc-'+objId);const row=document.getElementById('ocr-'+objId);cb.checked=!cb.checked;row.classList.toggle('checked',cb.checked);}
+function saveAssignments(){
+  const s=students.find(x=>x.id===assigningStudentId);
+  if(s)s.assignedObjectives=objectives.filter(o=>document.getElementById('oc-'+o.id)?.checked).map(o=>o.id);
+  closeModal('modal-assign');viewStudent(assigningStudentId);showToast('✓ Objectives assigned');
+}
+
+function viewStudent(id){
+  viewingStudentId=id;
+  const s=students.find(x=>x.id===id);if(!s)return;
+  document.getElementById('profile-title').textContent=s.name;
+  document.getElementById('profile-subtitle').textContent=`Age ${calcAge(s.dob)} · ${s.notes||'No notes'}`;
+  const logs=sessionLogs.filter(l=>l.studentId===id).sort((a,b)=>b.date.localeCompare(a.date));
+  const avgPct=logs.length?Math.round(logs.reduce((sum,l)=>sum+(l.total>0?l.correct/l.total*100:0),0)/logs.length):null;
+  const assignedObjs=objectives.filter(o=>s.assignedObjectives.includes(o.id));
+
+  document.getElementById('profile-layout').innerHTML=`
+    <div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">Profile</div><button class="btn btn-yellow btn-xs" onclick="openEditStudent('${s.id}')">Edit</button></div>
+        <div class="panel-body" style="text-align:center">
+          <div style="font-size:4rem;margin-bottom:12px">${s.avatar}</div>
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem">${s.name}</div>
+          <div style="color:var(--muted);font-size:0.85rem;margin-top:4px">DOB: ${fmtDate(s.dob)} · Age ${calcAge(s.dob)}</div>
+          ${s.notes?`<div style="margin-top:14px;padding:12px;background:#ede9e0;border-radius:var(--radius-sm);font-size:0.82rem;text-align:left;color:var(--muted)">${s.notes}</div>`:''}
+        </div>
+      </div>
+      ${s.reinforcers?`<div class="panel"><div class="panel-head"><div class="panel-title">🌟 Reinforcers</div></div><div class="panel-body"><div class="reinforcer-strip"><span style="font-size:1.4rem">⭐</span><div><div style="font-size:0.7rem;font-weight:700;color:#8a6e1c;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px">Motivators for this student</div><div style="font-size:0.85rem">${s.reinforcers}</div></div></div></div></div>`:''}
+      ${avgPct!==null?`<div class="panel"><div class="panel-head"><div class="panel-title">💡 Prompt Suggestion</div></div><div class="panel-body"><div class="prompt-suggest-box"><strong>Based on ${avgPct}% avg accuracy:</strong><br>${getPromptSuggestion(avgPct)}</div></div></div>`:''}
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">Stats</div></div>
+        <div class="panel-body"><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="stat" style="box-shadow:none"><div class="stat-num">${logs.length}</div><div class="stat-lbl">Sessions</div></div>
+          <div class="stat" style="box-shadow:none"><div class="stat-num" style="color:var(--success)">${avgPct!==null?avgPct+'%':'—'}</div><div class="stat-lbl">Avg Acc.</div></div>
+        </div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">Assigned Objectives</div><button class="btn btn-yellow btn-xs" onclick="openAssign('${s.id}')">Manage</button></div>
+        <div class="panel-body">
+          ${assignedObjs.length?assignedObjs.map(obj=>`
+            <div class="assigned-obj-row">
+              <div class="aobj-info"><div class="aobj-name">OBJ ${obj.code} — ${obj.name}</div><div class="aobj-meta">${obj.tasks.length} tasks</div></div>
+              <button class="btn btn-primary btn-xs" onclick="runWithStudent('${obj.id}','${s.id}')">▶ Run</button>
+            </div>
+          `).join(''):`<div style="text-align:center;padding:16px 0;color:var(--muted);font-size:0.85rem">No objectives assigned.<br><button class="btn btn-primary btn-sm" style="margin-top:10px" onclick="openAssign('${s.id}')">Assign Objectives</button></div>`}
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">Session History</div><button class="btn btn-yellow btn-xs" onclick="exportCSV()">⬇ Export CSV</button></div>
+        <div class="panel-body" style="padding:0;overflow:hidden">
+          ${logs.length?`<table class="history-table"><thead><tr><th>Date</th><th>Objective</th><th>Correct</th><th>Total</th><th>Accuracy</th><th>Prompts</th></tr></thead><tbody>
+            ${logs.map(l=>{
+              const obj=objectives.find(o=>o.id===l.objId);
+              const pct=l.total>0?Math.round(l.correct/l.total*100):0;
+              const pc={};l.tasks.forEach(t=>t.trials.forEach(tr=>{pc[tr.prompt]=(pc[tr.prompt]||0)+1;}));
+              const ps=Object.entries(pc).map(([p,n])=>`${PROMPT_ABBR[p]||p}×${n}`).join(', ');
+              return `<tr><td>${fmtDate(l.date)}</td><td style="font-size:0.82rem">${obj?'OBJ '+obj.code+' — '+obj.name.substring(0,22):'Unknown'}</td><td>${l.correct}</td><td>${l.total}</td><td>${pctBadge(pct)}</td><td style="font-size:0.78rem;color:var(--muted)">${ps||'—'}</td></tr>`;
+            }).join('')}
+          </tbody></table>`:`<div class="empty" style="border:none"><div class="e-ico">📊</div>No sessions yet.</div>`}
+        </div>
+      </div>
+      ${logs.length&&logs[0].tasks?`<div class="panel"><div class="panel-head"><div class="panel-title">Last Session — Trial Detail</div></div>
+        <div class="panel-body" style="padding:0;overflow:hidden"><table class="history-table"><thead><tr><th>Task</th><th>Trial</th><th>Item</th><th>Response</th><th>Prompt Level</th></tr></thead><tbody>
+          ${logs[0].tasks.flatMap((t,ti)=>t.trials.map(tr=>`<tr><td>Task ${ti+1}</td><td>${tr.trial}</td><td>${tr.itemWord||'—'}</td><td>${tr.correct?`<span style="color:var(--success);font-weight:700">✓ Correct</span>`:`<span style="color:var(--red)">✗ Error</span>`}</td><td style="font-weight:600;color:${PROMPT_COLOR[tr.prompt]||'var(--muted)'}">${tr.prompt}</td></tr>`)).join('')}
+        </tbody></table></div></div>`:''}
+    </div>
+  `;
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
+  document.getElementById('view-profile').classList.add('active');
+  document.querySelectorAll('.npill').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.npill')[1]?.classList.add('active');
+}
+function openEditStudent(id){
+  const s=students.find(x=>x.id===id);if(!s)return;
+  editingStudentId=id;selectedAvatar=s.avatar||'🧒';
+  document.getElementById('modal-student-title').textContent='Edit Student';
+  document.getElementById('s-name').value=s.name;
+  document.getElementById('s-dob').value=s.dob||'';
+  document.getElementById('s-notes').value=s.notes||'';
+  if(document.getElementById('s-reinforcers'))document.getElementById('s-reinforcers').value=s.reinforcers||'';
+  document.getElementById('avatar-preview').textContent=s.avatar||'🧒';
+  renderAvatarPicker();openModal('modal-student');
+}
+
+function exportCSV(){
+  const s=students.find(x=>x.id===viewingStudentId);
+  if(!s){showToast('Open a student profile first');return;}
+  const logs=sessionLogs.filter(l=>l.studentId===s.id).sort((a,b)=>a.date.localeCompare(b.date));
+  if(!logs.length){showToast('No session data to export');return;}
+  const rows=[['Student Name','DOB','Date','Objective Code','Objective Name','Task #','Trial #','Target Item','Response','Prompt Level','Session Accuracy %']];
+  logs.forEach(l=>{
+    const obj=objectives.find(o=>o.id===l.objId);
+    l.tasks.forEach((t,ti)=>{t.trials.forEach(tr=>{
+      const pct=l.total>0?Math.round(l.correct/l.total*100):0;
+      rows.push([s.name,s.dob||'',l.date,obj?obj.code:'',obj?obj.name:'',ti+1,tr.trial,tr.itemWord||'',tr.correct?'Correct':'Error',tr.prompt||'',pct+'%']);
+    });});
+  });
+  const csv=rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download=`StimuliLab_${s.name.replace(/\s/g,'_')}_${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();showToast('✓ Data sheet exported');
+}
+
+// ═══════════════════════════════════════
+// BUILDER
+// ═══════════════════════════════════════
+function renderBuilder(){renderLibFilters();renderLibGrid();}
+function renderLibFilters(){
+  const allFilters=['My Photos',...Object.keys(LIBRARY)];
+  const labels={'My Photos':'📷 My Photos',Animals:'🐾 Animals',Objects:'🏠 Objects',Emotions:'😊 Emotions','Letters & Numbers':'🔤 Letters & Numbers',Clothing:'👕 Clothing',Actions:'🏃 Actions',Prepositions:'📍 Prepositions',Shapes:'🔷 Shapes',Sequences:'📋 Sequences',Food:'🍕 Food'};
+  document.getElementById('lib-filters').innerHTML=allFilters.map(c=>`<button class="lib-mini-chip ${c===libFilter?'active':''}" onclick="setLibFilter('${c}')">${labels[c]||c}</button>`).join('');
+}
+function setLibFilter(cat){libFilter=cat;libChosen=[];renderLibFilters();renderLibGrid();}
+function renderLibGrid(){
+  const items=libItemsForFilter();
+  const grid=document.getElementById('lib-grid-mini');
+  if(!items.length){
+    const msg=libFilter==='My Photos'
+      ?`<div style="font-size:0.8rem;color:var(--muted);padding:16px 8px;text-align:center;line-height:1.5">No photos uploaded yet.<br><a href="#" onclick="gotoView('photos')" style="color:var(--blue);font-weight:600">Go to Photo Library →</a></div>`
+      :`<div style="font-size:0.8rem;color:var(--muted);padding:12px 0;text-align:center">No items found.</div>`;
+    grid.innerHTML=msg;return;
+  }
+  grid.innerHTML=items.map(item=>`
+    <div class="lib-cell ${libChosen.includes(item.id)?'selected':''}" onclick="toggleLibItem('${item.id}')">
+      ${item.src
+        ?`<img class="lc-img" src="${item.src}" style="width:44px;height:44px;object-fit:cover;border-radius:6px;display:block;margin:0 auto 3px"/>`
+        :`<span class="lc-emoji" style="display:block;margin-bottom:3px">${item.variants?.[0]||'?'}</span>`}
+      <div style="font-size:0.68rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${item.word}</div>
+    </div>`).join('');
+}
+function toggleLibItem(id){const i=libChosen.indexOf(id);if(i===-1)libChosen.push(id);else libChosen.splice(i,1);renderLibGrid();}
+
+function addTaskCard(){
+  taskCounter++;
+  const tid='task-'+taskCounter;
+  bTasks.push({id:tid,type:'identification',instruction:'',items:[],steps:[],pairs:[],numPicsShown:3,multiSelect:false,correctCount:1});
+  document.getElementById('tasks-empty')?.remove();
+  const wrap=document.getElementById('task-cards-wrap');
+  const idx=bTasks.length-1;
+  const card=document.createElement('div');
+  card.className='task-build-card';card.id='tbc-'+tid;
+  card.innerHTML=buildTaskCardHTML(tid,idx);
+  wrap.appendChild(card);
+  initDragEvents(tid);
+}
+
+function buildTaskCardHTML(tid,idx){
+  const t=bTasks[idx];
+  return `
+    <div class="tbc-head">
+      <span class="drag-handle" title="Drag to reorder">⠿</span>
+      <div class="tbc-num">${idx+1}</div>
+      <div class="tbc-title">Task ${idx+1}</div>
+      <div class="tbc-actions">
+        <button class="tbc-icon-btn tbc-preview" onclick="previewTask('${tid}')" title="Preview">👁</button>
+        <button class="tbc-icon-btn tbc-copy" onclick="duplicateTask('${tid}')" title="Duplicate">⧉</button>
+        <button class="tbc-icon-btn tbc-remove" onclick="removeTaskCard('${tid}')" title="Remove">✕</button>
+      </div>
+    </div>
+    <div class="tbc-body">
+      <div class="form-group">
+        <label>Task Type</label>
+        <div class="task-type-grid">
+          ${Object.entries(TASK_TYPES).map(([key,tt])=>`
+            <div class="task-type-opt ${t.type===key?'selected':''}" onclick="setTaskType('${tid}',${idx},'${key}',this)">
+              <div class="tt-icon">${tt.icon}</div>
+              <div class="tt-label">${tt.label}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Spoken Instruction</label>
+        <input type="text" placeholder='e.g. "Touch the cat"' oninput="updateInstruction('${tid}',this.value)" value="${t.instruction}"/>
+      </div>
+      <div id="task-type-fields-${tid}">${renderTypeFields(tid,idx)}</div>
+    </div>`;
+}
+
+function updateTaskProp(tid,key,val){const idx=bTasks.findIndex(t=>t.id===tid);if(idx!==-1)bTasks[idx][key]=val;}
+function updateInstruction(tid,val){const idx=bTasks.findIndex(t=>t.id===tid);if(idx!==-1)bTasks[idx].instruction=val;}
+function setTaskType(tid,_unused,type,el){
+  const idx=bTasks.findIndex(t=>t.id===tid);if(idx===-1)return;
+  bTasks[idx].type=type;
+  el.closest('.task-type-grid').querySelectorAll('.task-type-opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('task-type-fields-'+tid).innerHTML=renderTypeFields(tid,idx);
+}
+
+function renderTypeFields(tid,idx){
+  const t=bTasks[idx];
+  let fields='';
+  if(t.type==='identification') fields=renderIdentFields(tid,idx);
+  else if(t.type==='matching') fields=renderMatchFields(tid,idx);
+  else if(t.type==='sequencing') fields=renderSeqFields(tid,idx);
+  return fields + renderMasteryCriteria(tid,idx);
+}
+
+function renderIdentFields(tid,idx){
+  const t=bTasks[idx];
+  return `
+    <div class="tbc-row">
+      <div class="form-group"><label>Pictures shown</label>
+        <select onchange="updateTaskProp('${tid}','numPicsShown',parseInt(this.value))">
+          ${[2,3,4,5,6].map(n=>`<option value="${n}" ${t.numPicsShown===n?'selected':''}>${n}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group"><label>Correct answers</label>
+        <select onchange="updateTaskProp('${tid}','correctCount',parseInt(this.value));updateTaskProp('${tid}','multiSelect',parseInt(this.value)>1)">
+          ${[1,2,3].map(n=>`<option value="${n}" ${t.correctCount===n?'selected':''}>${n}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <label>Items</label>
+    <div class="item-legend">
+      <span><span class="legend-dot" style="background:var(--blue);display:inline-block"></span>Target</span>
+      <span><span class="legend-dot" style="background:var(--success);display:inline-block"></span>Distractor</span>
+    </div>
+    <div class="items-grid" id="ig-${tid}">${renderIdentItems(tid,idx)}</div>
+    <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-primary btn-xs" onclick="addIdentItems('${tid}',${idx},true)">+ Target</button>
+      <button class="btn btn-green btn-xs" onclick="addIdentItems('${tid}',${idx},false)">+ Distractor</button>
+      <span style="font-size:0.73rem;color:var(--muted);align-self:center">Select from library first</span>
+    </div>`;
+}
+
+function renderIdentItems(tid,idx){
+  const t=bTasks[idx];
+  if(!t.items.length)return`<div style="font-size:0.78rem;color:var(--muted);padding:8px 0">No items yet</div>`;
+  return t.items.map((item,ii)=>`
+    <div class="item-thumb ${item.isTarget?'target':'distractor'}">
+      <div style="display:flex;align-items:center;justify-content:center;height:52px">${renderMedia(item.id,0,48)}</div>
+      <div class="it-word">${item.word}</div>
+      <div class="it-badge ${item.isTarget?'it-badge-t':'it-badge-d'}">${item.isTarget?'T':'D'}</div>
+      <button onclick="removeIdentItem('${tid}',${idx},${ii})" style="position:absolute;bottom:3px;right:3px;background:none;border:none;cursor:pointer;font-size:0.62rem;color:var(--muted)">✕</button>
+    </div>`).join('');
+}
+function addIdentItems(tid,_unused,isTarget){
+  const idx=bTasks.findIndex(t=>t.id===tid);if(idx===-1)return;
+  if(!libChosen.length){showToast('Select items from library first');return;}
+  libChosen.forEach(id=>{if(bTasks[idx].items.find(i=>i.id===id))return;const li=getItem(id);if(!li)return;bTasks[idx].items.push({id,word:li.word,variantUsed:0,isTarget,src:li.src||null});});
+  libChosen=[];renderLibGrid();document.getElementById('ig-'+tid).innerHTML=renderIdentItems(tid,idx);
+}
+function removeIdentItem(tid,_unused,ii){const idx=bTasks.findIndex(t=>t.id===tid);if(idx===-1)return;bTasks[idx].items.splice(ii,1);document.getElementById('ig-'+tid).innerHTML=renderIdentItems(tid,idx);}
+
+function renderMatchFields(tid,idx){
+  const t=bTasks[idx];
+  return `
+    <label>Matching Pairs (image ↔ word)</label>
+    <div class="items-grid" id="ig-${tid}">${renderMatchPairs(tid,idx)}</div>
+    <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-primary btn-xs" onclick="addMatchPairs('${tid}',${idx})">+ Add Pairs</button>
+      <span style="font-size:0.73rem;color:var(--muted);align-self:center">Select items from library</span>
+    </div>`;
+}
+function renderMatchPairs(tid,idx){
+  const t=bTasks[idx];
+  if(!t.pairs||!t.pairs.length)return`<div style="font-size:0.78rem;color:var(--muted);padding:8px 0">No pairs yet</div>`;
+  return t.pairs.map((p,pi)=>`
+    <div class="item-thumb" style="border-color:var(--blue);background:rgba(74,127,193,0.07)">
+      <div style="display:flex;align-items:center;justify-content:center;height:52px">${renderMedia(p.id,0,48)}</div>
+      <div class="it-word">${p.word}</div>
+      <div class="it-badge it-badge-t">${pi+1}</div>
+      <button onclick="removeMatchPair('${tid}',${idx},${pi})" style="position:absolute;bottom:3px;right:3px;background:none;border:none;cursor:pointer;font-size:0.62rem;color:var(--muted)">✕</button>
+    </div>`).join('');
+}
+function addMatchPairs(tid,_unused){
+  const idx=bTasks.findIndex(t=>t.id===tid);if(idx===-1)return;
+  if(!libChosen.length){showToast('Select items from library first');return;}
+  if(!bTasks[idx].pairs)bTasks[idx].pairs=[];
+  libChosen.forEach(id=>{if(bTasks[idx].pairs.find(p=>p.id===id))return;const li=getItem(id);if(!li)return;bTasks[idx].pairs.push({id,word:li.word,variantUsed:0,src:li.src||null});});
+  libChosen=[];renderLibGrid();document.getElementById('ig-'+tid).innerHTML=renderMatchPairs(tid,idx);
+}
+function removeMatchPair(tid,_unused,pi){const idx=bTasks.findIndex(t=>t.id===tid);if(idx===-1)return;bTasks[idx].pairs.splice(pi,1);document.getElementById('ig-'+tid).innerHTML=renderMatchPairs(tid,idx);}
+
+function renderSeqFields(tid,idx){
+  const t=bTasks[idx];
+  if(!t.steps)t.steps=[];
+  return `
+    <label>Steps in correct order</label>
+    <div class="seq-step-list" id="ssl-${tid}">${renderSeqSteps(tid,idx)}</div>
+    <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-yellow btn-xs" onclick="addSeqSteps('${tid}',${idx})">+ Add Steps</button>
+      <span style="font-size:0.73rem;color:var(--muted);align-self:center">Select from library — order matters!</span>
+    </div>
+    <div style="margin-top:8px;font-size:0.75rem;color:var(--muted)">💡 Tip: Use the "Sequences" category in the library for pre-made routine steps.</div>`;
+}
+function renderSeqSteps(tid,idx){
+  const steps=bTasks[idx].steps||[];
+  if(!steps.length)return`<div style="font-size:0.78rem;color:var(--muted);padding:8px 0">No steps yet. Steps will be shown to students shuffled.</div>`;
+  return steps.map((s,si)=>`
+    <div class="seq-step-row">
+      <div class="seq-step-num">${si+1}</div>
+      <div style="flex-shrink:0">${renderMedia(s.id,0,32)}</div>
+      <div class="seq-step-label">${s.word}</div>
+      <button class="seq-step-remove" onclick="removeSeqStep('${tid}',${idx},${si})">✕</button>
+    </div>`).join('');
+}
+function addSeqSteps(tid,_unused){
+  const idx=bTasks.findIndex(t=>t.id===tid);if(idx===-1)return;
+  if(!libChosen.length){showToast('Select steps from library first');return;}
+  if(!bTasks[idx].steps)bTasks[idx].steps=[];
+  libChosen.forEach(id=>{if(bTasks[idx].steps.find(s=>s.id===id))return;const li=getItem(id);if(!li)return;bTasks[idx].steps.push({id,word:li.word,variantUsed:0,src:li.src||null});});
+  libChosen=[];renderLibGrid();document.getElementById('ssl-'+tid).innerHTML=renderSeqSteps(tid,idx);
+}
+function removeSeqStep(tid,_unused,si){const idx=bTasks.findIndex(t=>t.id===tid);if(idx===-1)return;bTasks[idx].steps.splice(si,1);document.getElementById('ssl-'+tid).innerHTML=renderSeqSteps(tid,idx);}
+
+function removeTaskCard(tid){
+  const idx=bTasks.findIndex(t=>t.id===tid);if(idx===-1)return;
+  bTasks.splice(idx,1);document.getElementById('tbc-'+tid)?.remove();
+  if(!bTasks.length)document.getElementById('task-cards-wrap').innerHTML=`<div class="empty" id="tasks-empty"><div class="e-ico">📋</div>Click "Add Task" to begin</div>`;
+}
+
+function saveObjective(){
+  const code=document.getElementById('obj-id').value.trim();
+  const name=document.getElementById('obj-name').value.trim();
+  const desc=document.getElementById('obj-desc').value.trim();
+  if(!code){showToast('Enter an objective ID');return;}
+  if(!name){showToast('Enter a name');return;}
+  if(!bTasks.length){showToast('Add at least one task');return;}
+  for(let i=0;i<bTasks.length;i++){
+    const t=bTasks[i];
+    if(!t.instruction){showToast(`Task ${i+1}: add a spoken instruction`);return;}
+    if(t.type==='identification'&&!t.items.some(it=>it.isTarget)){showToast(`Task ${i+1}: add at least one target item`);return;}
+    if(t.type==='matching'&&(!t.pairs||t.pairs.length<2)){showToast(`Task ${i+1}: add at least 2 matching pairs`);return;}
+    if(t.type==='sequencing'&&(!t.steps||t.steps.length<2)){showToast(`Task ${i+1}: add at least 2 sequence steps`);return;}
+  }
+  const vt={};
+  const finalTasks=bTasks.map(bt=>({...bt,items:(bt.items||[]).map(item=>{if(vt[item.id]===undefined)vt[item.id]=0;else vt[item.id]++;return{...item,variantUsed:vt[item.id]};}),pairs:(bt.pairs||[]).map(p=>({...p})),steps:(bt.steps||[]).map(s=>({...s}))}));
+  // Compute mastery as avg of task criteria
+  const masteryPcts=finalTasks.map(t=>t.masteryCriteria?.pct||80);
+  const masterySess=finalTasks.map(t=>t.masteryCriteria?.sessions||3);
+  const mastery={pct:Math.round(masteryPcts.reduce((a,b)=>a+b,0)/masteryPcts.length),sessions:Math.max(...masterySess)};
+  objectives.push({id:'obj-'+Date.now(),code,name,desc,mastery,tasks:finalTasks});
+  showToast('✓ Objective saved');resetBuilder();setTimeout(()=>gotoView('dashboard'),700);
+}
+
+function resetBuilder(){
+  bTasks=[];taskCounter=0;libChosen=[];
+  document.getElementById('obj-id').value='';
+  document.getElementById('obj-name').value='';
+  document.getElementById('obj-desc').value='';
+  document.getElementById('task-cards-wrap').innerHTML=`<div class="empty" id="tasks-empty"><div class="e-ico">📋</div>Click "Add Task" to begin</div>`;
+  renderLibGrid();
+}
+
+// ═══════════════════════════════════════
+// RUNNER
+// ═══════════════════════════════════════
+function runWithDropdown(objId){
+  const sel=document.getElementById('student-select-'+objId);
+  if(!sel||!sel.value){showToast('Please select a student first');return;}
+  startSession(objId,sel.value);
+}
+function runWithStudent(objId,studentId){startSession(objId,studentId);}
+
+function startSession(objId,studentId){
+  rObj=objectives.find(o=>o.id===objId);
+  rStudent=students.find(s=>s.id===studentId);
+  if(!rObj||!rStudent)return;
+  totalSessions++;
+  rTaskIdx=0;rCurrentPrompt='Independent';
+  rSessionLog={id:'log-'+Date.now(),studentId,objId,date:new Date().toISOString().split('T')[0],tasks:[],correct:0,total:0};
+  document.getElementById('r-student-avatar').textContent=rStudent.avatar;
+  document.getElementById('r-student-name').textContent=rStudent.name;
+  document.getElementById('r-obj-name').textContent='OBJ '+rObj.code+' — '+rObj.name;
+  document.getElementById('runner').classList.add('open');
+  // Show reinforcer banner
+  if(rStudent.reinforcers){
+    const banner=document.createElement('div');
+    banner.id='reinforcer-banner';
+    banner.style.cssText='position:fixed;top:68px;left:0;right:0;z-index:501;background:rgba(201,168,76,0.12);border-bottom:1.5px solid rgba(201,168,76,0.3);padding:8px 36px;font-size:0.82rem;display:flex;align-items:center;gap:8px;';
+    banner.innerHTML='<span style="font-size:1rem">⭐</span><strong style="color:#8a6e1c">Reinforcers:</strong> '+rStudent.reinforcers;
+    document.getElementById('runner').appendChild(banner);
+  }
+  document.getElementById('prompt-bar').style.display='flex';
+  setPrompt('Independent');renderTaskTabs();loadTask(0);
+}
+
+function closeRunner(){
+  const b=document.getElementById('reinforcer-banner');if(b)b.remove();
+  if(rSessionLog&&rSessionLog.total>0)sessionLogs.push(rSessionLog);
+  document.getElementById('runner').classList.remove('open');
+  if(viewingStudentId&&rStudent&&viewingStudentId===rStudent.id)viewStudent(viewingStudentId);
+  else renderDashboard();
+}
+
+function setPrompt(p){
+  rCurrentPrompt=p;
+  document.querySelectorAll('.prompt-btn').forEach(b=>b.classList.remove('active'));
+  const map={Independent:'pb-ind',Gestural:'pb-gest',Verbal:'pb-verb',Physical:'pb-phys','Full Physical':'pb-full'};
+  document.getElementById(map[p])?.classList.add('active');
+}
+
+function renderTaskTabs(){
+  document.getElementById('task-tabs').innerHTML=rObj.tasks.map((t,i)=>`
+    <div class="ttab ${i<rTaskIdx?'done':i===rTaskIdx?'current':''}" id="ttab-${i}">${TASK_TYPES[t.type]?.icon||''} Task ${i+1}</div>`).join('');
+}
+
+function loadTask(idx){
+  rTaskIdx=idx;rTrialIdx=0;rTrialLog=[];
+  rSessionLog.tasks.push({taskIdx:idx,trials:[]});
+  const task=rObj.tasks[idx];
+  if(task.type==='identification'){
+    rTrials=[];
+    for(let t=0;t<3;t++)rTrials.push(shuffle(task.items.map(item=>({...item,displayVariant:(item.variantUsed||0)+t}))));
+  } else if(task.type==='matching'){
+    rTrials=[{pairs:shuffle([...(task.pairs||[])])}];
+  } else if(task.type==='sequencing'){
+    rTrials=[{steps:shuffle([...(task.steps||[])])},{steps:shuffle([...(task.steps||[])])},{steps:shuffle([...(task.steps||[])])}];
+  }
+  renderTaskTabs();
+  document.getElementById('r-task-indicator').textContent=`Task ${idx+1} of ${rObj.tasks.length} · ${TASK_TYPES[task.type]?.label||task.type}`;
+  renderCurrentTrial();
+}
+
+function renderCurrentTrial(){
+  const task=rObj.tasks[rTaskIdx];
+  if(task.type==='identification') renderIdentTrial();
+  else if(task.type==='matching') renderMatchTrial();
+  else if(task.type==='sequencing') renderSeqTrial();
+}
+
+// ── IDENTIFICATION ──
+function renderIdentTrial(){
+  const task=rObj.tasks[rTaskIdx];
+  const items=rTrials[rTrialIdx];
+  document.getElementById('runner-body').innerHTML=`
+    <div class="instruction-banner">
+      <div class="task-label">🖼️ Identification · Task ${rTaskIdx+1} · Trial ${rTrialIdx+1} of 3</div>
+      <div class="instruction-text">${task.instruction}</div>
+    </div>
+    <div class="pic-grid" id="pic-grid">
+      ${items.map((item,i)=>`
+        <div class="pic-card" id="pc-${i}" onclick="handleIdentClick(${i},'${item.id}','${item.word}',${item.isTarget})">
+          <div style="display:flex;align-items:center;justify-content:center;min-height:90px">${renderMedia(item.id,item.displayVariant||0,80)}</div>
+          <div class="pic-feedback">${item.isTarget?'✅':'❌'}</div>
+        </div>`).join('')}
+    </div>
+    ${task.multiSelect?`<div class="multi-submit-area"><button class="btn btn-primary" onclick="submitMultiIdent()">Submit Selection</button><span style="font-size:0.82rem;color:var(--muted)">Select ${task.correctCount} image${task.correctCount>1?'s':''}</span></div>`:''}
+    <div class="trial-bar">${rTrials.map((_,i)=>`<div class="trial-dot ${i<rTrialIdx?'done':i===rTrialIdx?'current':''}"></div>`).join('')}</div>`;
+}
+
+let rMultiChosen=[];
+function handleIdentClick(cardIdx,itemId,itemWord,isTarget){
+  const task=rObj.tasks[rTaskIdx];
+  if(task.multiSelect){toggleMultiIdent(cardIdx,itemId,itemWord,isTarget);}
+  else{singleIdentSelect(cardIdx,itemId,itemWord,isTarget);}
+}
+function singleIdentSelect(ci,itemId,itemWord,isTarget){
+  recordTrial(isTarget,itemWord);
+  const card=document.getElementById('pc-'+ci);
+  if(isTarget){card.classList.add('selected-correct');document.querySelectorAll('.pic-card').forEach((c,i)=>{if(i!==ci)c.classList.add('grayed');});setTimeout(()=>advanceTrial(),900);}
+  else{card.classList.add('selected-wrong');setTimeout(()=>{card.classList.remove('selected-wrong');},400);setTimeout(()=>advanceTrial(),800);}
+}
+function toggleMultiIdent(ci,itemId,itemWord,isTarget){
+  const card=document.getElementById('pc-'+ci);
+  const idx=rMultiChosen.findIndex(x=>x.ci===ci);
+  if(idx!==-1){rMultiChosen.splice(idx,1);card.classList.remove('multi-selected');}
+  else{rMultiChosen.push({ci,itemId,itemWord,isTarget});card.classList.add('multi-selected');}
+}
+function submitMultiIdent(){
+  const task=rObj.tasks[rTaskIdx];
+  const trialItems=rTrials[rTrialIdx];
+  const allTargets=trialItems.filter(i=>i.isTarget).every(ti=>rMultiChosen.find(c=>c.itemId===ti.id));
+  const noWrong=rMultiChosen.every(c=>c.isTarget);
+  const correct=allTargets&&noWrong;
+  const tw=trialItems.filter(i=>i.isTarget).map(i=>i.word).join('+');
+  recordTrial(correct,tw);
+  if(correct){rMultiChosen.forEach(c=>document.getElementById('pc-'+c.ci)?.classList.add('selected-correct'));document.querySelectorAll('.pic-card').forEach((c,i)=>{if(!rMultiChosen.find(x=>x.ci===i))c.classList.add('grayed');});}
+  else{rMultiChosen.forEach(c=>document.getElementById('pc-'+c.ci)?.classList.add('selected-wrong'));setTimeout(()=>document.querySelectorAll('.pic-card').forEach(c=>c.classList.remove('selected-wrong','multi-selected')),400);}
+  rMultiChosen=[];setTimeout(()=>advanceTrial(),900);
+}
+
+// ── MATCHING ──
+function renderMatchTrial(){
+  const task=rObj.tasks[rTaskIdx];
+  const pairs=rTrials[0].pairs;
+  rMatchLeft=pairs; rMatchRight=shuffle([...pairs]); rMatchSelected=null; rMatchSide=null; rMatchDone=[];
+  document.getElementById('runner-body').innerHTML=`
+    <div class="instruction-banner">
+      <div class="task-label">🔗 Matching · Task ${rTaskIdx+1}</div>
+      <div class="instruction-text">${task.instruction}</div>
+    </div>
+    <div class="match-layout">
+      <div>
+        <div class="match-col-label">Images</div>
+        <div style="display:flex;flex-direction:column;gap:12px" id="match-left">
+          ${rMatchLeft.map((p,i)=>`
+            <div class="pic-card" id="ml-${i}" onclick="matchClick('left',${i},'${p.id}')">
+              <div style="display:flex;align-items:center;justify-content:center;min-height:80px">${renderMedia(p.id,p.variantUsed||0,72)}</div>
+              <div class="pic-feedback">✅</div>
+            </div>`).join('')}
+        </div>
+      </div>
+      <div class="match-connector-col" id="conn-col">
+        ${rMatchLeft.map((_,i)=>`<div class="conn-line" id="conn-${i}"></div>`).join('')}
+      </div>
+      <div>
+        <div class="match-col-label">Words</div>
+        <div style="display:flex;flex-direction:column;gap:12px" id="match-right">
+          ${rMatchRight.map((p,i)=>`
+            <div class="pic-card" id="mr-${i}" onclick="matchClick('right',${i},'${p.id}')">
+              <div class="pic-word">${p.word}</div>
+              <div class="pic-feedback">✅</div>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+}
+
+function matchClick(side,i,itemId){
+  if(rMatchDone.includes(itemId)) return;
+  if(rMatchSide===null){
+    rMatchSide=side; rMatchSelected={i,itemId};
+    document.getElementById(`m${side==='left'?'l':'r'}-${i}`)?.classList.add('match-selected');
+  } else if(rMatchSide===side){
+    // re-select same side
+    const prev=rMatchSelected;
+    document.getElementById(`m${side==='left'?'l':'r'}-${prev.i}`)?.classList.remove('match-selected');
+    rMatchSelected={i,itemId};
+    document.getElementById(`m${side==='left'?'l':'r'}-${i}`)?.classList.add('match-selected');
+  } else {
+    // pair attempt
+    const otherSide=rMatchSide;
+    const prev=rMatchSelected;
+    document.getElementById(`m${otherSide==='left'?'l':'r'}-${prev.i}`)?.classList.remove('match-selected');
+    const leftId=otherSide==='left'?prev.itemId:itemId;
+    const rightId=otherSide==='left'?itemId:prev.itemId;
+    const leftIdx=otherSide==='left'?prev.i:i;
+    const rightIdx=otherSide==='left'?i:prev.i;
+    const correct=leftId===rightId;
+    if(correct){
+      document.getElementById('ml-'+leftIdx)?.classList.add('match-correct');
+      document.getElementById('mr-'+rightIdx)?.classList.add('match-correct');
+      const connIdx=rMatchLeft.findIndex(p=>p.id===leftId);
+      document.getElementById('conn-'+connIdx)?.classList.add('matched');
+      rMatchDone.push(leftId);
+      recordTrial(true,getItem(leftId)?.word||leftId);
+      if(rMatchDone.length===rMatchLeft.length){setTimeout(()=>advanceTrial(),700);}
+    } else {
+      document.getElementById('ml-'+leftIdx)?.classList.add('match-wrong');
+      document.getElementById('mr-'+rightIdx)?.classList.add('match-wrong');
+      recordTrial(false,getItem(leftId)?.word||leftId);
+      setTimeout(()=>{document.getElementById('ml-'+leftIdx)?.classList.remove('match-wrong');document.getElementById('mr-'+rightIdx)?.classList.remove('match-wrong');},400);
+    }
+    rMatchSide=null; rMatchSelected=null;
+  }
+}
+
+// ── SEQUENCING ──
+function renderSeqTrial(){
+  const task=rObj.tasks[rTaskIdx];
+  const trial=rTrials[rTrialIdx];
+  rSeqCorrectOrder=[...task.steps];
+  rSeqChoices=trial.steps.map((s,i)=>({...s,choiceIdx:i}));
+  rSeqSlots=rSeqCorrectOrder.map(()=>null);
+  renderSeqUI();
+}
+
+function renderSeqUI(){
+  const task=rObj.tasks[rTaskIdx];
+  document.getElementById('runner-body').innerHTML=`
+    <div class="instruction-banner">
+      <div class="task-label">📋 Sequencing · Task ${rTaskIdx+1} · Trial ${rTrialIdx+1} of ${rTrials.length}</div>
+      <div class="instruction-text">${task.instruction}</div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;width:100%;max-width:560px">
+      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em">Tap a step below, then tap a slot to place it</div>
+      <div class="seq-runner-list" id="seq-slots">
+        ${rSeqSlots.map((slot,si)=>`
+          <div class="seq-slot ${slot?'filled':''} ${slot&&rSeqCorrectOrder[si]&&slot.id===rSeqCorrectOrder[si].id?'':''}  " id="slot-${si}" onclick="placeInSlot(${si})">
+            <div class="seq-slot-num">${si+1}</div>
+            <div class="seq-slot-content">
+              ${slot?`<div style="flex-shrink:0">${renderMedia(slot.id,slot.variantUsed||0,36)}</div><div class="seq-slot-text" style="margin-left:8px">${slot.word}</div>`:
+              `<div class="seq-slot-placeholder">Tap here to place step ${si+1}</div>`}
+            </div>
+            ${slot?`<button class="seq-slot-remove" onclick="event.stopPropagation();removeFromSlot(${si})">↩</button>`:''}
+          </div>`).join('')}
+      </div>
+      <div style="font-size:0.78rem;color:var(--muted);margin:20px 0 10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em">Steps to place:</div>
+      <div class="seq-choices" id="seq-choices">
+        ${rSeqChoices.map((s,ci)=>`
+          <div class="seq-choice ${rSeqSlots.find(sl=>sl&&sl.id===s.id)?'used':''} ${rSeqActiveChoice&&rSeqActiveChoice.id===s.id?'multi-selected':''}" id="choice-${ci}" onclick="selectSeqChoice(${ci},'${s.id}')">
+            <div style="flex-shrink:0">${renderMedia(s.id,s.variantUsed||0,36)}</div>
+            <div class="seq-choice-text">${s.word}</div>
+          </div>`).join('')}
+      </div>
+      ${rSeqSlots.every(s=>s!==null)?`<div style="margin-top:20px;display:flex;gap:12px"><button class="btn btn-primary" onclick="submitSeq()">✓ Check Order</button><button class="btn btn-ghost" onclick="clearSeq()">↺ Clear</button></div>`:''}
+    </div>
+    <div class="trial-bar">${rTrials.map((_,i)=>`<div class="trial-dot ${i<rTrialIdx?'done':i===rTrialIdx?'current':''}"></div>`).join('')}</div>`;
+}
+
+let rSeqActiveChoice=null;
+function selectSeqChoice(ci,itemId){
+  rSeqActiveChoice=rSeqChoices.find(s=>s.id===itemId)&&!rSeqSlots.find(sl=>sl&&sl.id===itemId)?rSeqChoices[ci]:null;
+  // If already placed don't select
+  if(rSeqSlots.find(sl=>sl&&sl.id===itemId)){rSeqActiveChoice=null;}
+  renderSeqUI();
+}
+function placeInSlot(si){
+  if(!rSeqActiveChoice) return;
+  if(rSeqSlots[si]) return; // slot occupied
+  rSeqSlots[si]={...rSeqActiveChoice};
+  rSeqActiveChoice=null;
+  renderSeqUI();
+}
+function removeFromSlot(si){
+  rSeqSlots[si]=null;
+  renderSeqUI();
+}
+function clearSeq(){rSeqSlots=rSeqSlots.map(()=>null);rSeqActiveChoice=null;renderSeqUI();}
+
+function submitSeq(){
+  const correct=rSeqSlots.every((slot,i)=>slot&&rSeqCorrectOrder[i]&&slot.id===rSeqCorrectOrder[i].id);
+  const word=rSeqSlots.filter(Boolean).map(s=>s.word).join('→');
+  recordTrial(correct,word);
+
+  // Flash correct/wrong per slot
+  rSeqSlots.forEach((slot,i)=>{
+    const slotEl=document.getElementById('slot-'+i);
+    if(!slotEl)return;
+    const slotCorrect=slot&&rSeqCorrectOrder[i]&&slot.id===rSeqCorrectOrder[i].id;
+    slotEl.classList.add(slotCorrect?'correct-slot':'wrong-slot');
+  });
+
+  setTimeout(()=>advanceTrial(),1200);
+}
+
+// ── SHARED RUNNER ──
+function recordTrial(correct,itemWord){
+  const entry={trial:rTrialIdx+1,correct,prompt:rCurrentPrompt,itemWord};
+  // Update live prompt suggestion
+  const allTrials=[...rSessionLog.tasks.flatMap(t=>t.trials),entry];
+  const livePct=allTrials.length?Math.round(allTrials.filter(t=>t.correct).length/allTrials.length*100):null;
+  const sugEl=document.getElementById('prompt-suggest-runner');
+  if(sugEl&&livePct!==null){
+    const s=PROMPT_SUGGESTIONS.find(s=>livePct>=s.threshold)||PROMPT_SUGGESTIONS[PROMPT_SUGGESTIONS.length-1];
+    sugEl.textContent='Tip: '+s.msg;
+  }
+  rTrialLog.push(entry);
+  const taskLog=rSessionLog.tasks[rSessionLog.tasks.length-1];
+  if(taskLog)taskLog.trials.push(entry);
+  rSessionLog.total++;
+  if(correct)rSessionLog.correct++;
+}
+
+function advanceTrial(){
+  rTrialIdx++;rMultiChosen=[];rSeqActiveChoice=null;
+  const task=rObj.tasks[rTaskIdx];
+  const maxTrials=task.type==='matching'?1:3;
+  if(rTrialIdx<Math.min(rTrials.length,maxTrials)){
+    renderCurrentTrial();
+  } else if(rTaskIdx+1<rObj.tasks.length){
+    showTaskBridge();
+  } else {
+    showSessionComplete();
+  }
+}
+
+function showTaskBridge(){
+  const taskCorrect=rTrialLog.filter(t=>t.correct).length;
+  const pct=rTrialLog.length?Math.round(taskCorrect/rTrialLog.length*100):0;
+  document.getElementById('ttab-'+rTaskIdx)?.classList.replace('current','done');
+  document.getElementById('runner-body').innerHTML=`
+    <div class="result-full">
+      <div class="result-big">${pct>=70?'🌟':'👍'}</div>
+      <h2>Task ${rTaskIdx+1} Complete</h2>
+      <p>Moving to Task ${rTaskIdx+2}</p>
+      <div class="score-breakdown">
+        <div class="score-box"><div class="sb-num" style="color:var(--success)">${taskCorrect}/${rTrialLog.length}</div><div class="sb-lbl">Correct</div></div>
+        <div class="score-box"><div class="sb-num">${pct}%</div><div class="sb-lbl">Accuracy</div></div>
+      </div>
+      <table class="trial-log"><thead><tr><th>Trial</th><th>Response</th><th>Prompt</th></tr></thead><tbody>
+        ${rTrialLog.map(t=>`<tr><td>Trial ${t.trial}</td><td>${t.correct?`<span style="color:var(--success);font-weight:700">✓ Correct</span>`:`<span style="color:var(--red)">✗ Error</span>`}</td><td style="font-weight:600;color:${PROMPT_COLOR[t.prompt]||'var(--muted)'}">${t.prompt}</td></tr>`).join('')}
+      </tbody></table>
+      <button class="btn btn-primary" onclick="loadTask(${rTaskIdx+1})">Next Task →</button>
+    </div>`;
+}
+
+function showSessionComplete(){
+  document.getElementById('ttab-'+rTaskIdx)?.classList.replace('current','done');
+  document.getElementById('prompt-bar').style.display='none';
+  const pct=rSessionLog.total>0?Math.round(rSessionLog.correct/rSessionLog.total*100):0;
+  const allTrials=rSessionLog.tasks.flatMap(t=>t.trials);
+  const pc={};allTrials.forEach(t=>{pc[t.prompt]=(pc[t.prompt]||0)+1;});
+  document.getElementById('runner-body').innerHTML=`
+    <div class="result-full">
+      <div class="result-big">${pct>=80?'🏆':pct>=60?'🌟':'💪'}</div>
+      <h2>Session Complete!</h2>
+      <p><strong>${rStudent.name}</strong> · ${rObj.name}</p>
+      <div class="score-breakdown">
+        <div class="score-box"><div class="sb-num" style="color:var(--success)">${rSessionLog.correct}</div><div class="sb-lbl">Correct</div></div>
+        <div class="score-box"><div class="sb-num">${rSessionLog.total}</div><div class="sb-lbl">Trials</div></div>
+        <div class="score-box"><div class="sb-num" style="color:${pct>=80?'var(--success)':pct>=60?'var(--yellow)':'var(--red)'}">${pct}%</div><div class="sb-lbl">Accuracy</div></div>
+      </div>
+      <div style="margin-bottom:20px;padding:16px;background:#ede9e0;border-radius:var(--radius-sm);font-size:0.85rem;width:100%;text-align:left">
+        <div style="font-weight:700;margin-bottom:8px;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted)">Prompts Used</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          ${Object.entries(pc).map(([p,n])=>`<div><span style="font-weight:700;color:${PROMPT_COLOR[p]||'var(--muted)'}">${p}</span> <span style="background:var(--border);border-radius:10px;padding:2px 8px;font-size:0.75rem;font-weight:700">${n}</span></div>`).join('')}
+        </div>
+      </div>
+      <table class="trial-log" style="margin-bottom:20px"><thead><tr><th>Task</th><th>Trial</th><th>Response</th><th>Prompt</th></tr></thead><tbody>
+        ${rSessionLog.tasks.flatMap((t,ti)=>t.trials.map(tr=>`<tr><td>Task ${ti+1}</td><td>${tr.trial}</td><td>${tr.correct?`<span style="color:var(--success);font-weight:700">✓ Correct</span>`:`<span style="color:var(--red)">✗ Error</span>`}</td><td style="font-weight:600;color:${PROMPT_COLOR[tr.prompt]||'var(--muted)'}">${tr.prompt}</td></tr>`)).join('')}
+      </tbody></table>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="startSession('${rObj.id}','${rStudent.id}')">Run Again</button>
+        <button class="btn btn-yellow" onclick="closeRunner();setTimeout(()=>viewStudent('${rStudent.id}'),100)">View Profile</button>
+        <button class="btn btn-ghost" onclick="closeRunner()">Done</button>
+      </div>
+    </div>`;
+}
+
+renderDashboard();
+</script>
+</body>
+</html>
